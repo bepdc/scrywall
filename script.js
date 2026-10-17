@@ -14,7 +14,7 @@ const DONATION_OPTIONS = [
   { amount: 5,   emoji: "🍻" },
 ];
 
-const STORAGE_KEY = "palantirtube.links";
+const STORAGE_KEY = "scrywall.links";
 const YT_ID_RE = /^[\w-]{11}$/;
 const TW_RE = /^[A-Za-z0-9_]{3,25}$/;
 

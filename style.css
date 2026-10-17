@@ -50,6 +50,18 @@ body {
   background: radial-gradient(circle at 35% 30%, #fff2c9 0, #f2b24a 28%, #a24a12 62%, #1a0d05 100%);
   box-shadow: 0 0 10px rgba(240, 185, 74, .45);
   animation: glow 4s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+/* griglia di "finestre" dentro la sfera: il muro di schermi */
+.orb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--bg, #090b12), var(--bg, #090b12)) center / 8% 100% no-repeat,
+    linear-gradient(var(--bg, #090b12), var(--bg, #090b12)) center / 100% 8% no-repeat;
+  opacity: .75;
 }
 .orb-big { width: 46px; height: 46px; }
 
