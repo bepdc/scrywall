@@ -66,6 +66,7 @@ const state = {
   tiles: [],          // { el, src, player, ready, setMuted, muteBtn, labelEl, dead, errored }
   focusedIndex: null, // null = modalità griglia
   audioIndex: null,   // quale video ha l'audio attivo
+  dragIndex: null,    // indice del tile che si sta trascinando (drag & drop)
 };
 
 /* ---------- Sorgenti (YouTube / Twitch) ---------- */
@@ -522,6 +523,7 @@ async function startWall(sources) {
     const slotId = `player-${i}`;
     const tileEl = document.createElement("div");
     tileEl.className = "tile";
+    tileEl.draggable = true;
     tileEl.innerHTML = `
       <div class="tile-head">
         <span class="badge ${src.type}" data-i18n-attr="title:tile.${src.type === "tw" ? "twitch" : "youtube"}" title="${t(src.type === "tw" ? "tile.twitch" : "tile.youtube")}"></span>
@@ -550,17 +552,59 @@ async function startWall(sources) {
     if (src.type === "tw") createTwitchTile(tile, slotId);
     else createYouTubeTile(tile, slotId);
 
+    // L'indice iniziale "i" non basta più: dopo un trascinamento (drag & drop)
+    // la posizione del tile nell'array cambia, quindi lo ricalcoliamo ogni volta.
+    const liveIndex = () => state.tiles.indexOf(tile);
+
     // Click sul riquadro (titolo o video): lo porta in primo piano
     tileEl.addEventListener("click", (ev) => {
       if (ev.target.closest(".mute")) return;
-      if (state.focusedIndex === i) return;
-      focusTile(i);
+      const idx = liveIndex();
+      if (state.focusedIndex === idx) return;
+      focusTile(idx);
     });
 
     // Click sul pulsante audio: audio solo su questo
     tile.muteBtn.addEventListener("click", (ev) => {
       ev.stopPropagation();
-      setAudio(state.audioIndex === i ? null : i);
+      const idx = liveIndex();
+      setAudio(state.audioIndex === idx ? null : idx);
+    });
+
+    // Drag & drop per riordinare i video: niente anteprime fluttuanti, solo lo
+    // scambio diretto di posizione tra il tile trascinato e quello di destinazione.
+    tileEl.addEventListener("dragstart", (ev) => {
+      if (ev.target.closest(".mute") || tileEl.classList.contains("focused")) {
+        ev.preventDefault();
+        return;
+      }
+      state.dragIndex = liveIndex();
+      ev.dataTransfer.effectAllowed = "move";
+      ev.dataTransfer.setData("text/plain", String(state.dragIndex));
+      tileEl.classList.add("dragging");
+    });
+
+    tileEl.addEventListener("dragover", (ev) => {
+      if (state.dragIndex === null || tileEl.classList.contains("focused")) return;
+      ev.preventDefault();
+      tileEl.classList.add("drag-over");
+    });
+
+    tileEl.addEventListener("dragleave", () => {
+      tileEl.classList.remove("drag-over");
+    });
+
+    tileEl.addEventListener("drop", (ev) => {
+      ev.preventDefault();
+      tileEl.classList.remove("drag-over");
+      if (state.dragIndex === null) return;
+      swapTiles(state.dragIndex, liveIndex());
+      state.dragIndex = null;
+    });
+
+    tileEl.addEventListener("dragend", () => {
+      state.dragIndex = null;
+      state.tiles.forEach((t) => t.el.classList.remove("dragging", "drag-over"));
     });
 
     state.tiles.push(tile);
@@ -577,6 +621,7 @@ function destroyWall() {
   state.tiles = [];
   state.focusedIndex = null;
   state.audioIndex = null;
+  state.dragIndex = null;
   ghostEl = null; // era già figlio di #wall: innerHTML="" se ne occupa
   els.wall.innerHTML = "";
 }
@@ -687,15 +732,24 @@ function placeGhost(index) {
   els.wall.appendChild(ghostEl);
 }
 
+// Riga fissa per ogni tile (indice attuale) + segnaposto vuoto al posto del
+// tile in primo piano. Richiamabile anche dopo un drag & drop, senza
+// riaprire la modalità focus da zero (niente scroll in cima non richiesto).
+function applyFocusLayout() {
+  els.wall.style.setProperty("--side-count", state.tiles.length);
+  state.tiles.forEach((t, i) => {
+    t.el.style.setProperty("--row", String(i + 1));
+    t.el.classList.toggle("focused", i === state.focusedIndex);
+  });
+  placeGhost(state.focusedIndex);
+}
+
 function focusTile(index) {
   state.focusedIndex = index;
   els.wall.classList.add("focus");
   els.wall.style.minHeight = "";
-  els.wall.style.setProperty("--side-count", state.tiles.length);
-  state.tiles.forEach((t, i) => t.el.style.setProperty("--row", String(i + 1)));
-  placeGhost(index);
+  applyFocusLayout();
   updateMainHeight();
-  state.tiles.forEach((t, i) => t.el.classList.toggle("focused", i === index));
   els.btnGrid.classList.remove("hidden");
   window.scrollTo({ top: 0 });
 }
@@ -712,6 +766,29 @@ function showGrid() {
   });
   els.btnGrid.classList.add("hidden");
   layoutGrid();
+}
+
+/* ---------- Drag & drop: scambio di posizione tra due tile ---------- */
+
+function swapTiles(a, b) {
+  if (a === b || a == null || b == null || a < 0 || b < 0) return;
+
+  [state.tiles[a], state.tiles[b]] = [state.tiles[b], state.tiles[a]];
+  [state.sources[a], state.sources[b]] = [state.sources[b], state.sources[a]];
+
+  const remap = (idx) => (idx === a ? b : idx === b ? a : idx);
+  if (state.focusedIndex !== null) state.focusedIndex = remap(state.focusedIndex);
+  if (state.audioIndex !== null) state.audioIndex = remap(state.audioIndex);
+
+  // L'ordine nel DOM deve seguire il nuovo ordine: in griglia la posizione
+  // dei riquadri segue l'auto-flow, che si basa sull'ordine dei nodi.
+  state.tiles.forEach((tile) => els.wall.appendChild(tile.el));
+
+  // Il link condiviso rispecchia subito il nuovo ordine dei video.
+  history.replaceState(null, "", hashFor(state.sources));
+
+  if (state.focusedIndex !== null) applyFocusLayout();
+  else layoutGrid();
 }
 
 /* ---------- Eventi UI ---------- */

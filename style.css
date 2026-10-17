@@ -393,6 +393,13 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 
 .tile.is-error .label { color: var(--danger); }
 
+/* Drag & drop: solo classi sul riquadro reale, nessun elemento fluttuante */
+.tile.dragging { opacity: .35; }
+.tile.drag-over {
+  outline: 2px dashed var(--accent);
+  outline-offset: -2px;
+}
+
 /* Il video con l'audio attivo ha un alone dorato */
 .tile.has-audio {
   border-color: var(--accent);
