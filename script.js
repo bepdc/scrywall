@@ -469,6 +469,11 @@ function createYouTubeTile(tile, slotId) {
       tile.player.setVolume(100);
     }
   };
+
+  // Se l'utente tocca l'audio dalla barra di YouTube su un riquadro che deve restare muto
+  tile.enforceMute = () => {
+    if (tile.player.isMuted() === false) tile.player.mute();
+  };
 }
 
 function createTwitchTile(tile, slotId) {
@@ -501,6 +506,10 @@ function createTwitchTile(tile, slotId) {
   tile.setMuted = (muted) => {
     player.setMuted(muted);
     if (!muted) player.setVolume(1);
+  };
+
+  tile.enforceMute = () => {
+    if (player.getMuted() === false) player.setMuted(true);
   };
 }
 
@@ -553,6 +562,7 @@ async function startWall(sources) {
       muteBtn: tileEl.querySelector(".mute"),
       player: null,
       setMuted: () => {},
+      enforceMute: () => {},
     };
 
     if (src.type === "tw") createTwitchTile(tile, slotId);
@@ -574,10 +584,34 @@ async function startWall(sources) {
     state.tiles.push(tile);
   });
 
+  startMuteWatchdog();
   showGrid();
 }
 
+// I player non avvisano quando l'utente cambia il volume dai loro controlli
+// (succede nel riquadro in primo piano, dove lo scudo è disattivato):
+// ogni mezzo secondo si riporta a muto tutto ciò che non ha l'audio attivo.
+let muteWatchdog = null;
+
+function startMuteWatchdog() {
+  stopMuteWatchdog();
+  muteWatchdog = setInterval(() => {
+    // dopo un cambio di audio i player aggiornano il loro stato in modo asincrono: si aspetta
+    if (Date.now() - (state.audioChangedAt || 0) < 1500) return;
+    state.tiles.forEach((t, i) => {
+      if (!t.ready || t.dead || i === state.audioIndex) return;
+      try { t.enforceMute(); } catch (_) { /* player non pronto */ }
+    });
+  }, 500);
+}
+
+function stopMuteWatchdog() {
+  if (muteWatchdog) clearInterval(muteWatchdog);
+  muteWatchdog = null;
+}
+
 function destroyWall() {
+  stopMuteWatchdog();
   state.tiles.forEach((t) => {
     t.dead = true;
     try { if (t.src.type === "yt") t.player.destroy(); } catch (_) { /* pazienza */ }
@@ -592,6 +626,7 @@ function destroyWall() {
 
 function setAudio(index) {
   state.audioIndex = index;
+  state.audioChangedAt = Date.now();
   state.tiles.forEach((t, i) => {
     const on = i === index;
     if (t.ready) {
