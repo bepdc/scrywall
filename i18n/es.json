@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Mira varios vídeos de YouTube y directos de Twitch a la vez, en una sola pantalla."
+  },
+  "setup": {
+    "tagline": "Muchas pantallas, una sola mirada.",
+    "intro": "Añade enlaces de YouTube o directos de Twitch, uno por línea: la línea vacía de abajo siempre está lista para el siguiente. Todos empiezan juntos y en silencio, el audio lo activas tú, uno a la vez. Luego puedes copiar un enlace para enviarlo a quien quieras: verá los mismos vídeos.",
+    "linkPlaceholder": "Pega un enlace de YouTube o Twitch…",
+    "removeLink": "Quitar este enlace",
+    "startButton": "▶ Mostrar todos los vídeos",
+    "noValidLinks": "Ningún enlace válido (YouTube o Twitch). ¿Pegaste la lista de la compra?",
+    "ignoredLinks": {
+      "one": "Se ignoró {n} enlace no válido.",
+      "other": "Se ignoraron {n} enlaces no válidos."
+    }
+  },
+  "toolbar": {
+    "grid": "Vista de cuadrícula",
+    "muteAll": "🔇 Silenciar todo",
+    "share": "🔗 Compartir",
+    "editLink": "Editar enlaces"
+  },
+  "tile": {
+    "loading": "Cargando…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Activar/desactivar audio",
+    "offline": "{channel} · desconectado"
+  },
+  "errors": {
+    "youtubeNotFound": "Vídeo no encontrado o privado",
+    "youtubeEmbedDisabled": "El autor desactivó la incrustación",
+    "youtubeFileProtocol": "Error 153: abre el sitio por http(s), no desde file://",
+    "youtubeGeneric": "Error de reproducción",
+    "youtubeUnavailable": "No se pudo cargar YouTube",
+    "twitchUnavailable": "{channel} · no se pudo cargar Twitch",
+    "twitchFileProtocol": "Twitch necesita http(s): abre el sitio desde un servidor, no desde file://"
+  },
+  "donate": {
+    "description": "El sitio es gratis. Si te resulta útil, un café o una cerveza siempre viene bien.",
+    "customAmountLabel": "Importe libre",
+    "customAmountPlaceholder": "ej. 3,50",
+    "goToPaypal": "Ir a PayPal",
+    "invalidAmount": "Importe no válido: prueba con algo como 3,50",
+    "note": "Se abre PayPal en una pestaña nueva: el pago se hace ahí.",
+    "close": "Cerrar"
+  },
+  "share": {
+    "copied": "Enlace copiado al portapapeles",
+    "promptCopy": "Copia el enlace:"
+  },
+  "common": {
+    "languageLabel": "Idioma"
+  }
+}

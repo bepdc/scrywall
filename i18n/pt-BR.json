@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Veja vários vídeos do YouTube e lives da Twitch ao mesmo tempo, numa única tela."
+  },
+  "setup": {
+    "tagline": "Muitas telas, um só olhar.",
+    "intro": "Adicione links do YouTube ou lives da Twitch, um por linha: a linha vazia no final está sempre pronta para o próximo. Todos começam juntos e mudos, você ativa o áudio, um de cada vez. Depois você pode copiar um link para mandar pra quem quiser: a pessoa vai ver os mesmos vídeos.",
+    "linkPlaceholder": "Cole um link do YouTube ou Twitch…",
+    "removeLink": "Remover este link",
+    "startButton": "▶ Mostrar todos os vídeos",
+    "noValidLinks": "Nenhum link válido (YouTube ou Twitch). Você colou a lista de compras?",
+    "ignoredLinks": {
+      "one": "{n} link inválido ignorado.",
+      "other": "{n} links inválidos ignorados."
+    }
+  },
+  "toolbar": {
+    "grid": "Visualização em grade",
+    "muteAll": "🔇 Silenciar tudo",
+    "share": "🔗 Compartilhar",
+    "editLink": "Editar links"
+  },
+  "tile": {
+    "loading": "Carregando…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Ativar/desativar áudio",
+    "offline": "{channel} · offline"
+  },
+  "errors": {
+    "youtubeNotFound": "Vídeo não encontrado ou privado",
+    "youtubeEmbedDisabled": "Incorporação desativada pelo autor",
+    "youtubeFileProtocol": "Erro 153: abra o site via http(s), não por file://",
+    "youtubeGeneric": "Erro de reprodução",
+    "youtubeUnavailable": "Não foi possível carregar o YouTube",
+    "twitchUnavailable": "{channel} · não foi possível carregar a Twitch",
+    "twitchFileProtocol": "A Twitch exige http(s): abra o site a partir de um servidor, não por file://"
+  },
+  "donate": {
+    "description": "O site é gratuito. Se ele te ajuda, um café ou uma cerveja sempre caem bem.",
+    "customAmountLabel": "Valor livre",
+    "customAmountPlaceholder": "ex. 3,50",
+    "goToPaypal": "Ir para o PayPal",
+    "invalidAmount": "Valor inválido: tente algo como 3,50",
+    "note": "Abre o PayPal em uma nova aba: o pagamento acontece lá.",
+    "close": "Fechar"
+  },
+  "share": {
+    "copied": "Link copiado para a área de transferência",
+    "promptCopy": "Copie o link:"
+  },
+  "common": {
+    "languageLabel": "Idioma"
+  }
+}

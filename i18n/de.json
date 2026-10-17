@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Schau dir mehrere YouTube-Videos und Twitch-Streams gleichzeitig auf einem einzigen Bildschirm an."
+  },
+  "setup": {
+    "tagline": "Viele Bildschirme, ein einziger Blick.",
+    "intro": "Füge YouTube-Links oder Twitch-Streams ein, einen pro Zeile: Die leere Zeile unten ist immer schon für den nächsten Link bereit. Alle starten zusammen und stumm, den Ton schaltest du selbst ein, einen nach dem anderen. Danach kannst du einen Link kopieren und an wen auch immer schicken: die Person sieht dieselben Videos.",
+    "linkPlaceholder": "Füge einen YouTube- oder Twitch-Link ein…",
+    "removeLink": "Diesen Link entfernen",
+    "startButton": "▶ Alle Videos anzeigen",
+    "noValidLinks": "Kein gültiger Link (YouTube oder Twitch). Hast du die Einkaufsliste eingefügt?",
+    "ignoredLinks": {
+      "one": "{n} ungültigen Link ignoriert.",
+      "other": "{n} ungültige Links ignoriert."
+    }
+  },
+  "toolbar": {
+    "grid": "Rasteransicht",
+    "muteAll": "🔇 Alle stummschalten",
+    "share": "🔗 Teilen",
+    "editLink": "Links bearbeiten"
+  },
+  "tile": {
+    "loading": "Wird geladen…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Ton ein/aus",
+    "offline": "{channel} · offline"
+  },
+  "errors": {
+    "youtubeNotFound": "Video nicht gefunden oder privat",
+    "youtubeEmbedDisabled": "Einbettung vom Urheber deaktiviert",
+    "youtubeFileProtocol": "Fehler 153: Öffne die Seite über http(s), nicht über file://",
+    "youtubeGeneric": "Wiedergabefehler",
+    "youtubeUnavailable": "YouTube konnte nicht geladen werden",
+    "twitchUnavailable": "{channel} · Twitch konnte nicht geladen werden",
+    "twitchFileProtocol": "Twitch braucht http(s): Öffne die Seite über einen Server, nicht über file://"
+  },
+  "donate": {
+    "description": "Die Seite ist kostenlos. Wenn sie dir nützlich ist, freue ich mich immer über einen Kaffee oder ein Bier.",
+    "customAmountLabel": "Freier Betrag",
+    "customAmountPlaceholder": "z. B. 3,50",
+    "goToPaypal": "Zu PayPal",
+    "invalidAmount": "Ungültiger Betrag: versuch es z. B. mit 3,50",
+    "note": "Öffnet PayPal in einem neuen Tab: die Zahlung läuft dort.",
+    "close": "Schließen"
+  },
+  "share": {
+    "copied": "Link in die Zwischenablage kopiert",
+    "promptCopy": "Kopiere den Link:"
+  },
+  "common": {
+    "languageLabel": "Sprache"
+  }
+}

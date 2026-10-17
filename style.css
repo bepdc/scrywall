@@ -220,19 +220,72 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
 
 .donate { color: var(--gold); border-color: rgba(240, 185, 74, .35); }
 
-.lang-select {
+/* ---------- Selettore lingua (bandiera + nome nativo) ---------- */
+.lang-switch { position: relative; flex: none; }
+.lang-switch-corner { position: absolute; top: 18px; right: 18px; }
+
+.lang-switch-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   background: var(--surface);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 7px 11px;
   font-family: var(--font-ui);
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .03em;
   cursor: pointer;
 }
-.lang-select:hover { background: var(--surface-hover); border-color: rgba(255, 255, 255, .25); }
-.lang-select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-.setup-footer .lang-select { margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto; }
+.lang-switch-btn:hover { background: var(--surface-hover); border-color: rgba(255, 255, 255, .25); }
+.lang-switch-btn::after { content: "▾"; font-size: 9px; color: var(--muted); margin-left: 1px; }
+.lang-switch-btn[aria-expanded="true"]::after { content: "▴"; }
+
+.flag {
+  width: 20px;
+  height: 14px;
+  border-radius: 2px;
+  flex: none;
+  display: block;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .18);
+}
+
+.lang-switch-list {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: #151822;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+  min-width: 190px;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 30;
+}
+
+.lang-switch-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.lang-switch-option:hover { background: rgba(255, 255, 255, .08); }
+li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 
 .setup-footer { margin-top: 20px; text-align: center; }
 

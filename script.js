@@ -1,6 +1,6 @@
 "use strict";
 
-import { initI18n, t, formatMoney, currencySymbol, registerLanguageSelect } from "./i18n/i18n.js";
+import { initI18n, t, formatMoney, currencySymbol, registerLanguageSwitch } from "./i18n/i18n.js";
 
 /* =====================================================================
    ⚙️  CONFIGURAZIONE
@@ -57,8 +57,8 @@ const els = {
   donateGo: document.getElementById("donate-custom-go"),
   donateMsg: document.getElementById("donate-msg"),
   donateCurrency: document.getElementById("donate-currency"),
-  langSelectTopbar: document.getElementById("lang-select-topbar"),
-  langSelectSetup: document.getElementById("lang-select-setup"),
+  langSwitchTopbar: document.getElementById("lang-switch-topbar"),
+  langSwitchSetup: document.getElementById("lang-switch-setup"),
 };
 
 const state = {
@@ -758,8 +758,8 @@ document.addEventListener("scrywall:langchange", buildDonateDialog);
 /* ---------- Avvio ---------- */
 
 await initI18n();
-if (els.langSelectTopbar) registerLanguageSelect(els.langSelectTopbar);
-if (els.langSelectSetup) registerLanguageSelect(els.langSelectSetup);
+if (els.langSwitchTopbar) registerLanguageSwitch(els.langSwitchTopbar);
+if (els.langSwitchSetup) registerLanguageSwitch(els.langSwitchSetup);
 
 buildDonateDialog();
 

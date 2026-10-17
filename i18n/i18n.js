@@ -17,6 +17,17 @@ export const LANGUAGES = [
   { code: "fr", name: "Français" },
 ];
 
+// Bandierine come SVG inline (nessuna immagine esterna, nessun font emoji:
+// su Windows i glifi bandiera non vengono renderizzati come immagini).
+const FLAGS = {
+  it: `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect width="8" height="16" fill="#009246"/><rect x="16" width="8" height="16" fill="#ce2b37"/></svg>`,
+  en: `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#00247d"/><polygon points="0,0 2.4,0 24,14 24,16 21.6,16 0,2" fill="#fff"/><polygon points="24,0 21.6,0 0,14 0,16 2.4,16 24,2" fill="#fff"/><polygon points="0,0 1.2,0 24,15 24,16 22.8,16 0,1" fill="#cf142b"/><polygon points="24,0 22.8,0 0,15 0,16 1.2,16 24,1" fill="#cf142b"/><rect x="9.6" width="4.8" height="16" fill="#fff"/><rect y="5.6" width="24" height="4.8" fill="#fff"/><rect x="10.8" width="2.4" height="16" fill="#cf142b"/><rect y="6.8" width="24" height="2.4" fill="#cf142b"/></svg>`,
+  es: `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#aa151b"/><rect y="4" width="24" height="8" fill="#f1bf00"/></svg>`,
+  "pt-BR": `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#009739"/><polygon points="12,1.5 22,8 12,14.5 2,8" fill="#fedd00"/><circle cx="12" cy="8" r="4.2" fill="#002776"/></svg>`,
+  de: `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#ffce00"/><rect width="24" height="5.33" fill="#000"/><rect y="5.33" width="24" height="5.34" fill="#d00"/></svg>`,
+  fr: `<svg class="flag" viewBox="0 0 24 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="24" height="16" fill="#fff"/><rect width="8" height="16" fill="#0055a4"/><rect x="16" width="8" height="16" fill="#ef4135"/></svg>`,
+};
+
 const SUPPORTED_CODES = [...LANGUAGES.map((l) => l.code), "pseudo"];
 const FALLBACK_LANG = "en";
 const STORAGE_KEY = "scrywall.lang";
@@ -153,31 +164,84 @@ export function applyTranslations(root = document) {
   }
 }
 
-/* ---------- Selettore lingua ---------- */
+/* ---------- Selettore lingua (bandiera + nome nativo) ---------- */
 
-const selectEls = [];
+const switches = []; // { container, trigger, list, open }
 
-function populateSelectors() {
-  selectEls.forEach((select) => {
-    select.innerHTML = "";
-    LANGUAGES.forEach(({ code, name }) => {
-      const opt = document.createElement("option");
-      opt.value = code;
-      opt.textContent = name;
-      select.appendChild(opt);
+function setSwitchOpen(s, open) {
+  s.open = open;
+  s.list.hidden = !open;
+  s.trigger.setAttribute("aria-expanded", String(open));
+}
+
+function closeAllSwitches() {
+  switches.forEach((s) => setSwitchOpen(s, false));
+}
+
+function renderSwitch(s) {
+  const label = t("common.languageLabel");
+  s.trigger.setAttribute("aria-label", label);
+  s.trigger.innerHTML = `${FLAGS[currentLang] || ""}<span class="lang-switch-code">${
+    currentLang === "pseudo" ? "pseudo" : currentLang.toUpperCase()
+  }</span>`;
+
+  s.list.innerHTML = "";
+  LANGUAGES.forEach(({ code, name }) => {
+    const li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.setAttribute("aria-selected", String(code === currentLang));
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lang-switch-option";
+    btn.innerHTML = `${FLAGS[code] || ""}<span>${name}</span>`;
+    btn.addEventListener("click", () => {
+      setSwitchOpen(s, false);
+      if (code !== currentLang) setLanguage(code);
     });
-    // Se la lingua attiva è "pseudo" (solo via ?lang=pseudo) il selettore
-    // non ha quell'opzione: mostriamo semplicemente nessuna selezione coerente.
-    select.value = LANGUAGES.some((l) => l.code === currentLang) ? currentLang : "";
-    select.addEventListener("change", () => setLanguage(select.value));
+
+    li.appendChild(btn);
+    s.list.appendChild(li);
   });
 }
 
-export function registerLanguageSelect(select) {
-  if (!select || selectEls.includes(select)) return;
-  selectEls.push(select);
-  populateSelectors();
+function populateSelectors() {
+  switches.forEach(renderSwitch);
 }
+
+export function registerLanguageSwitch(container) {
+  if (!container || switches.some((s) => s.container === container)) return;
+
+  container.innerHTML = "";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "lang-switch-btn";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+
+  const list = document.createElement("ul");
+  list.className = "lang-switch-list";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+
+  container.append(trigger, list);
+
+  const s = { container, trigger, list, open: false };
+  trigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const willOpen = !s.open;
+    closeAllSwitches();
+    setSwitchOpen(s, willOpen);
+  });
+
+  switches.push(s);
+  renderSwitch(s);
+}
+
+document.addEventListener("click", closeAllSwitches);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeAllSwitches();
+});
 
 /* ---------- Cambio lingua ---------- */
 

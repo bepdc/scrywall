@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Regarde plusieurs vidéos YouTube et directs Twitch en même temps, sur un seul écran."
+  },
+  "setup": {
+    "tagline": "Plein d'écrans, un seul regard.",
+    "intro": "Ajoute des liens YouTube ou des directs Twitch, un par ligne : la ligne vide en bas est toujours prête pour le prochain. Ils démarrent tous ensemble, en muet, c'est toi qui actives le son, un à la fois. Tu peux ensuite copier un lien à envoyer à qui tu veux : la personne verra les mêmes vidéos.",
+    "linkPlaceholder": "Colle un lien YouTube ou Twitch…",
+    "removeLink": "Supprimer ce lien",
+    "startButton": "▶ Afficher toutes les vidéos",
+    "noValidLinks": "Aucun lien valide (YouTube ou Twitch). Tu as collé la liste de courses ?",
+    "ignoredLinks": {
+      "one": "{n} lien non valide ignoré.",
+      "other": "{n} liens non valides ignorés."
+    }
+  },
+  "toolbar": {
+    "grid": "Vue en grille",
+    "muteAll": "🔇 Tout muet",
+    "share": "🔗 Partager",
+    "editLink": "Modifier les liens"
+  },
+  "tile": {
+    "loading": "Chargement…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Activer/désactiver le son",
+    "offline": "{channel} · hors ligne"
+  },
+  "errors": {
+    "youtubeNotFound": "Vidéo introuvable ou privée",
+    "youtubeEmbedDisabled": "Intégration désactivée par l'auteur",
+    "youtubeFileProtocol": "Erreur 153 : ouvre le site via http(s), pas depuis file://",
+    "youtubeGeneric": "Erreur de lecture",
+    "youtubeUnavailable": "Impossible de charger YouTube",
+    "twitchUnavailable": "{channel} · impossible de charger Twitch",
+    "twitchFileProtocol": "Twitch a besoin de http(s) : ouvre le site depuis un serveur, pas depuis file://"
+  },
+  "donate": {
+    "description": "Le site est gratuit. S'il t'est utile, un café ou une bière, c'est toujours apprécié.",
+    "customAmountLabel": "Montant libre",
+    "customAmountPlaceholder": "ex. 3,50",
+    "goToPaypal": "Aller sur PayPal",
+    "invalidAmount": "Montant non valide : essaie par exemple 3,50",
+    "note": "Ouvre PayPal dans un nouvel onglet : le paiement se fait là-bas.",
+    "close": "Fermer"
+  },
+  "share": {
+    "copied": "Lien copié dans le presse-papiers",
+    "promptCopy": "Copie le lien :"
+  },
+  "common": {
+    "languageLabel": "Langue"
+  }
+}
