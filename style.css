@@ -10,6 +10,8 @@
   --accent-soft: rgba(240, 185, 74, .38);
   --teal: #7be0c3;
   --danger: #ff8a73;
+  --yt: #ff5a4d;
+  --tw: #9146ff;
   --topbar-h: 56px;
   --side-w: 300px;
   --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -214,6 +216,7 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
 
 /* ---------- Wall (modalità griglia: layout calcolato da script.js) ---------- */
 .wall {
+  --head-h: 34px; /* altezza della riga col titolo: il valore vero lo imposta script.js */
   display: grid;
   grid-template-columns: repeat(var(--cols, 1), var(--tile-w, 100%));
   gap: 8px;
@@ -222,19 +225,63 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
   align-content: center;
 }
 
+/* Ogni riquadro = riga col titolo (fuori dal video) + video sotto */
 .tile {
-  position: relative;
-  background: #000;
-  border: 1px solid rgba(255, 255, 255, .08);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
   cursor: pointer;
   transition: border-color .2s, box-shadow .2s;
 }
 .tile:hover { border-color: rgba(255, 255, 255, .22); }
 
-.tile iframe {
+.tile-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  height: var(--head-h);
+  padding: 0 6px 0 12px;
+  background: rgba(255, 255, 255, .04);
+  border-bottom: 1px solid var(--border);
+}
+
+.badge {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.badge.yt { background: var(--yt); box-shadow: 0 0 6px rgba(255, 90, 77, .6); }
+.badge.tw { background: var(--tw); box-shadow: 0 0 6px rgba(145, 70, 255, .7); }
+
+.tile-head .label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tile-head .mute {
+  flex: none;
+  padding: 3px 10px;
+  font-size: 14px;
+}
+
+.tile-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.tile-video iframe,
+.player-slot {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -249,39 +296,6 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
   z-index: 2;
 }
 
-.bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  background: linear-gradient(rgba(0, 0, 0, .8), transparent);
-  pointer-events: none;
-}
-.bar .label {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-size: 13px;
-  font-weight: 500;
-  text-shadow: 0 1px 3px #000;
-}
-.bar .mute {
-  pointer-events: auto;
-  flex: none;
-  padding: 4px 10px;
-  font-size: 14px;
-  background: rgba(0, 0, 0, .55);
-  backdrop-filter: blur(4px);
-}
-
 .tile.is-error .label { color: var(--danger); }
 
 /* Il video con l'audio attivo ha un alone dorato */
@@ -289,6 +303,7 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
   border-color: var(--accent);
   box-shadow: 0 0 22px var(--accent-soft);
 }
+.tile.has-audio .tile-head { background: rgba(240, 185, 74, .10); }
 
 /* ---------- Modalità focus ---------- */
 .wall.focus {
@@ -308,14 +323,19 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
 .wall.focus .tile.focused {
   grid-column: 1;
   grid-row: 1 / -1;
-  aspect-ratio: auto;
   height: var(--main-h, 70vh);
   position: sticky;
   top: 8px;
   cursor: default;
 }
 
-/* Nel video principale lo schermo trasparente sparisce: si usano i controlli YouTube */
+.wall.focus .tile.focused .tile-video {
+  aspect-ratio: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Nel video principale lo schermo trasparente sparisce: si usano i controlli del player */
 .wall.focus .tile.focused .shield { display: none; }
 
 /* ---------- Finestra donazioni ---------- */
@@ -454,8 +474,11 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
     position: relative;
     top: 0;
     height: auto;
-    aspect-ratio: 16 / 9;
     order: -1;
+  }
+  .wall.focus .tile.focused .tile-video {
+    aspect-ratio: 16 / 9;
+    flex: none;
   }
 }
 

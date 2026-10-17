@@ -2,8 +2,6 @@
 
 /* =====================================================================
    ⚙️  CONFIGURAZIONE
-   Metti qui il tuo link PayPal.me (vedi istruzioni nella chat).
-   Esempio: "https://paypal.me/mariorossi"
    ===================================================================== */
 const PAYPAL_ME_URL = "https://paypal.me/bepdc94";
 
@@ -16,14 +14,24 @@ const DONATION_OPTIONS = [
   { amount: 5,   emoji: "🍻" },
 ];
 
-
 const STORAGE_KEY = "palantirtube.links";
-const ID_RE = /^[\w-]{11}$/;
+const YT_ID_RE = /^[\w-]{11}$/;
+const TW_RE = /^[A-Za-z0-9_]{3,25}$/;
+
+// Pagine di twitch.tv che non sono canali
+const TW_RESERVED = new Set([
+  "videos", "directory", "downloads", "jobs", "turbo", "settings", "subscriptions",
+  "friends", "wallet", "p", "store", "about", "login", "signup", "search", "embed",
+  "moderator", "clips", "u", "team", "prime", "legal", "help", "inventory",
+]);
 
 // Parametri del layout automatico
-const GAP = 8;        // spazio tra i video (px)
-const PAD = 8;        // margine esterno del muro (px)
-const MIN_W = 240;    // larghezza minima di un video: sotto questa soglia si scorre la pagina
+const GAP = 8;             // spazio tra i video (px)
+const PAD = 8;             // margine esterno del muro (px)
+const HEAD_H = 34;         // altezza della riga col titolo, sopra ogni video (px)
+const CHROME = HEAD_H + 2; // titolo + bordo del riquadro
+const MIN_W = 240;         // larghezza minima di un riquadro: sotto questa soglia si scorre la pagina
+const TWITCH_MIN_W = 534;  // con Twitch il video deve restare almeno 400x300 (534 x 9/16 = 300), sennò l'autoplay non parte
 const RATIO = 16 / 9;
 
 const els = {
@@ -50,20 +58,21 @@ const els = {
 };
 
 const state = {
-  ids: [],            // ID dei video attualmente nel muro
-  tiles: [],          // { el, player, ready, muteBtn, labelEl, videoId, dead, errored }
+  sources: [],        // [{ type: "yt" | "tw", id }] attualmente nel muro
+  tiles: [],          // { el, src, player, ready, setMuted, muteBtn, labelEl, dead, errored }
   focusedIndex: null, // null = modalità griglia
   audioIndex: null,   // quale video ha l'audio attivo
 };
 
-/* ---------- Utilità ---------- */
+/* ---------- Sorgenti (YouTube / Twitch) ---------- */
 
-function extractVideoId(raw) {
+// Restituisce { type, id } oppure null se il testo non è un link valido
+function extractSource(raw) {
   const text = raw.trim();
   if (!text) return null;
 
-  // ID nudo
-  if (ID_RE.test(text)) return text;
+  // ID YouTube nudo
+  if (YT_ID_RE.test(text)) return { type: "yt", id: text };
 
   let url;
   try {
@@ -74,31 +83,80 @@ function extractVideoId(raw) {
 
   const host = url.hostname.replace(/^www\.|^m\./, "");
 
+  // ----- Twitch (solo dirette di un canale)
+  if (host === "twitch.tv" || host === "go.twitch.tv" || host === "player.twitch.tv") {
+    let name = null;
+    if (host === "player.twitch.tv") {
+      name = url.searchParams.get("channel");
+    } else {
+      const seg = url.pathname.split("/").filter(Boolean);
+      name = seg[0] === "popout" ? seg[1] : seg[0];
+    }
+    if (!name) return null;
+    name = name.toLowerCase();
+    if (TW_RESERVED.has(name) || !TW_RE.test(name)) return null;
+    return { type: "tw", id: name };
+  }
+
+  // ----- YouTube
   if (host === "youtu.be") {
     const id = url.pathname.slice(1).split("/")[0];
-    return ID_RE.test(id) ? id : null;
+    return YT_ID_RE.test(id) ? { type: "yt", id } : null;
   }
 
   if (host.endsWith("youtube.com") || host.endsWith("youtube-nocookie.com")) {
     const v = url.searchParams.get("v");
-    if (v && ID_RE.test(v)) return v;
+    if (v && YT_ID_RE.test(v)) return { type: "yt", id: v };
 
     const m = url.pathname.match(/^\/(?:embed|shorts|live|v)\/([\w-]{11})/);
-    if (m) return m[1];
+    if (m) return { type: "yt", id: m[1] };
   }
   return null;
 }
 
+// Forma compatta per il link condiviso: YouTube = ID, Twitch = "t:canale"
+function keyOf(src) {
+  return src.type === "tw" ? "t:" + src.id : src.id;
+}
+
+function sourceFromKey(key) {
+  if (key.startsWith("t:")) {
+    const name = key.slice(2).toLowerCase();
+    return TW_RE.test(name) ? { type: "tw", id: name } : null;
+  }
+  return YT_ID_RE.test(key) ? { type: "yt", id: key } : null;
+}
+
+function sourceUrl(src) {
+  return src.type === "tw"
+    ? `https://www.twitch.tv/${src.id}`
+    : `https://www.youtube.com/watch?v=${src.id}`;
+}
+
+/* ---------- Caricamento degli script dei player ---------- */
+
 function loadYouTubeApi() {
   return new Promise((resolve) => {
-    if (window.YT && window.YT.Player) return resolve();
+    if (window.YT && window.YT.Player) return resolve(true);
     const prev = window.onYouTubeIframeAPIReady;
     window.onYouTubeIframeAPIReady = () => {
       if (typeof prev === "function") prev();
-      resolve();
+      resolve(true);
     };
     const tag = document.createElement("script");
     tag.src = "https://www.youtube.com/iframe_api";
+    tag.onerror = () => resolve(false);
+    document.head.appendChild(tag);
+  });
+}
+
+function loadTwitchApi() {
+  return new Promise((resolve) => {
+    if (window.Twitch && window.Twitch.Player) return resolve(true);
+    const tag = document.createElement("script");
+    tag.src = "https://player.twitch.tv/js/embed/v1.js";
+    tag.onload = () => resolve(Boolean(window.Twitch && window.Twitch.Player));
+    tag.onerror = () => resolve(false); // es. bloccato da un adblock
     document.head.appendChild(tag);
   });
 }
@@ -181,7 +239,7 @@ function createRow(value = "") {
 
   const input = document.createElement("input");
   input.type = "text";
-  input.placeholder = "Incolla un link YouTube…";
+  input.placeholder = "Incolla un link YouTube o Twitch…";
   input.value = value;
   input.autocomplete = "off";
   input.spellcheck = false;
@@ -241,7 +299,7 @@ function createRow(value = "") {
 
 function validateRow(row) {
   const v = row.querySelector("input").value.trim();
-  const ok = v !== "" && extractVideoId(v) !== null;
+  const ok = v !== "" && extractSource(v) !== null;
   row.classList.toggle("valid", ok);
   row.classList.toggle("invalid", v !== "" && !ok);
 }
@@ -297,20 +355,24 @@ function loadSavedLinks() {
   }
 }
 
-/* ---------- Link condivisibile (gli ID stanno nell'hash dell'URL) ---------- */
+/* ---------- Link condivisibile (le sorgenti stanno nell'hash dell'URL) ---------- */
 
-function getIdsFromHash() {
-  const m = location.hash.match(/[#&]v=([\w,-]+)/);
+function getSourcesFromHash() {
+  const m = location.hash.match(/[#&]v=([\w,:-]+)/);
   if (!m) return [];
-  return m[1].split(",").filter((id) => ID_RE.test(id));
+  return m[1].split(",").map(sourceFromKey).filter(Boolean);
+}
+
+function hashFor(sources) {
+  return "#v=" + sources.map(keyOf).join(",");
 }
 
 function buildShareUrl() {
-  return location.origin + location.pathname + "#v=" + state.ids.join(",");
+  return location.origin + location.pathname + hashFor(state.sources);
 }
 
 async function copyShareLink() {
-  if (!state.ids.length) return;
+  if (!state.sources.length) return;
   const url = buildShareUrl();
   try {
     await navigator.clipboard.writeText(url);
@@ -323,12 +385,22 @@ async function copyShareLink() {
 
 /* ---------- Titoli dei video ---------- */
 
+function setLabel(tile, text) {
+  tile.labelEl.textContent = text;
+  tile.labelEl.title = text;
+}
+
+function markError(tile, text) {
+  tile.errored = true;
+  tile.el.classList.add("is-error");
+  setLabel(tile, text);
+}
+
 function updateTitle(tile) {
   try {
     const data = tile.player.getVideoData();
     if (data && data.title) {
-      tile.labelEl.textContent = data.title;
-      tile.labelEl.title = data.title;
+      setLabel(tile, data.title);
       return true;
     }
   } catch (_) { /* il player non è ancora pronto */ }
@@ -346,7 +418,7 @@ function trackTitle(tile) {
   tick();
 }
 
-function describeError(code) {
+function describeYouTubeError(code) {
   switch (code) {
     case 100: return "Video non trovato o privato";
     case 101:
@@ -356,76 +428,142 @@ function describeError(code) {
   }
 }
 
+/* ---------- Creazione dei player ---------- */
+
+function createYouTubeTile(tile, slotId) {
+  if (!(window.YT && window.YT.Player)) {
+    markError(tile, "Impossibile caricare YouTube");
+    return;
+  }
+
+  const videoId = tile.src.id;
+  tile.player = new YT.Player(slotId, {
+    videoId,
+    playerVars: {
+      autoplay: 1,
+      mute: 1,
+      playsinline: 1,
+      rel: 0,
+      loop: 1,
+      playlist: videoId, // necessario per far funzionare il loop
+    },
+    events: {
+      onReady: (e) => {
+        tile.ready = true;
+        e.target.mute();
+        e.target.playVideo();
+        trackTitle(tile);
+      },
+      onStateChange: () => {
+        if (!tile.errored) updateTitle(tile);
+      },
+      onError: (e) => markError(tile, describeYouTubeError(e.data)),
+    },
+  });
+
+  tile.setMuted = (muted) => {
+    if (muted) {
+      tile.player.mute();
+    } else {
+      tile.player.unMute();
+      tile.player.setVolume(100);
+    }
+  };
+}
+
+function createTwitchTile(tile, slotId) {
+  const channel = tile.src.id;
+  setLabel(tile, channel); // Twitch non fornisce il titolo della diretta: si mostra il nome del canale
+
+  if (!(window.Twitch && window.Twitch.Player)) {
+    markError(tile, `${channel} · impossibile caricare Twitch`);
+    return;
+  }
+  if (!location.hostname) {
+    markError(tile, "Twitch richiede http(s): apri il sito da un server, non da file://");
+    return;
+  }
+
+  const player = new Twitch.Player(slotId, {
+    channel,
+    parent: [location.hostname], // Twitch incorpora solo sul dominio dichiarato qui
+    muted: true,
+    autoplay: true,
+    width: "100%",
+    height: "100%",
+  });
+  tile.player = player;
+
+  player.addEventListener(Twitch.Player.READY, () => { tile.ready = true; });
+  player.addEventListener(Twitch.Player.OFFLINE, () => setLabel(tile, `${channel} · offline`));
+  player.addEventListener(Twitch.Player.ONLINE, () => setLabel(tile, channel));
+
+  tile.setMuted = (muted) => {
+    player.setMuted(muted);
+    if (!muted) player.setVolume(1);
+  };
+}
+
 /* ---------- Costruzione del muro ---------- */
 
-async function startWall(ids) {
-  await loadYouTubeApi();
+async function startWall(sources) {
+  const needYT = sources.some((s) => s.type === "yt");
+  const needTW = sources.some((s) => s.type === "tw");
+  await Promise.all([
+    needYT ? loadYouTubeApi() : null,
+    needTW ? loadTwitchApi() : null,
+  ]);
 
   destroyWall();
-  state.ids = ids.slice();
+  state.sources = sources.slice();
 
   // L'URL nella barra degli indirizzi diventa già il link da condividere
-  history.replaceState(null, "", "#v=" + state.ids.join(","));
+  history.replaceState(null, "", hashFor(state.sources));
 
   // Prima si mostra il muro, così le misure per il layout sono reali
   els.setup.classList.add("hidden");
   els.topbar.classList.remove("hidden");
   els.wall.classList.remove("hidden");
+  els.wall.style.setProperty("--head-h", HEAD_H + "px");
 
-  ids.forEach((videoId, i) => {
+  sources.forEach((src, i) => {
+    const slotId = `player-${i}`;
     const tileEl = document.createElement("div");
     tileEl.className = "tile";
     tileEl.innerHTML = `
-      <div id="player-${i}"></div>
-      <div class="shield"></div>
-      <div class="bar">
+      <div class="tile-head">
+        <span class="badge ${src.type}" title="${src.type === "tw" ? "Twitch" : "YouTube"}"></span>
         <span class="label">Caricamento…</span>
         <button class="mute" type="button" title="Attiva/disattiva audio">🔇</button>
+      </div>
+      <div class="tile-video">
+        <div class="player-slot" id="${slotId}"></div>
+        <div class="shield"></div>
       </div>
     `;
     els.wall.appendChild(tileEl);
 
     const tile = {
       el: tileEl,
+      src,
       ready: false,
       dead: false,
       errored: false,
-      videoId,
       labelEl: tileEl.querySelector(".label"),
       muteBtn: tileEl.querySelector(".mute"),
       player: null,
+      setMuted: () => {},
     };
 
-    tile.player = new YT.Player(`player-${i}`, {
-      videoId,
-      playerVars: {
-        autoplay: 1,
-        mute: 1,
-        playsinline: 1,
-        rel: 0,
-        loop: 1,
-        playlist: videoId, // necessario per far funzionare il loop
-      },
-      events: {
-        onReady: (e) => {
-          tile.ready = true;
-          e.target.mute();
-          e.target.playVideo();
-          trackTitle(tile);
-        },
-        onStateChange: () => {
-          if (!tile.errored) updateTitle(tile);
-        },
-        onError: (e) => {
-          tile.errored = true;
-          tile.el.classList.add("is-error");
-          tile.labelEl.textContent = describeError(e.data);
-        },
-      },
-    });
+    if (src.type === "tw") createTwitchTile(tile, slotId);
+    else createYouTubeTile(tile, slotId);
 
-    // Click sul video: lo porta in primo piano
-    tileEl.querySelector(".shield").addEventListener("click", () => focusTile(i));
+    // Click sul riquadro (titolo o video): lo porta in primo piano
+    tileEl.addEventListener("click", (ev) => {
+      if (ev.target.closest(".mute")) return;
+      if (state.focusedIndex === i) return;
+      focusTile(i);
+    });
 
     // Click sul pulsante audio: audio solo su questo
     tile.muteBtn.addEventListener("click", (ev) => {
@@ -442,7 +580,7 @@ async function startWall(ids) {
 function destroyWall() {
   state.tiles.forEach((t) => {
     t.dead = true;
-    try { t.player.destroy(); } catch (_) { /* pazienza */ }
+    try { if (t.src.type === "yt") t.player.destroy(); } catch (_) { /* pazienza */ }
   });
   state.tiles = [];
   state.focusedIndex = null;
@@ -457,12 +595,7 @@ function setAudio(index) {
   state.tiles.forEach((t, i) => {
     const on = i === index;
     if (t.ready) {
-      if (on) {
-        t.player.unMute();
-        t.player.setVolume(100);
-      } else {
-        t.player.mute();
-      }
+      try { t.setMuted(!on); } catch (_) { /* player non pronto */ }
     }
     t.muteBtn.textContent = on ? "🔊" : "🔇";
     t.el.classList.toggle("has-audio", on);
@@ -472,11 +605,14 @@ function setAudio(index) {
 /* ---------- Layout ---------- */
 
 // Griglia automatica: prova tutte le combinazioni colonne/righe e sceglie quella
-// che rende i video più grandi possibile (tutti uguali, tutti visibili senza scorrere).
+// che rende i riquadri più grandi possibile (tutti uguali, tutti visibili senza scorrere).
 function layoutGrid() {
   if (state.focusedIndex !== null || !state.tiles.length) return;
 
   const n = state.tiles.length;
+  const hasTwitch = state.sources.some((s) => s.type === "tw");
+  const minW = hasTwitch ? TWITCH_MIN_W : MIN_W;
+
   const W = els.wall.clientWidth - PAD * 2;
   const top = els.wall.offsetTop;
   const H = window.innerHeight - top - PAD * 2;
@@ -487,7 +623,8 @@ function layoutGrid() {
   for (let cols = 1; cols <= n; cols++) {
     const rows = Math.ceil(n / cols);
     const wByWidth = (W - GAP * (cols - 1)) / cols;
-    const wByHeight = ((H - GAP * (rows - 1)) / rows) * RATIO;
+    // l'altezza di un riquadro = titolo + video 16:9
+    const wByHeight = ((H - GAP * (rows - 1)) / rows - CHROME) * RATIO;
     const w = Math.min(wByWidth, wByHeight);
     if (w > bestW) {
       bestW = w;
@@ -496,10 +633,10 @@ function layoutGrid() {
   }
 
   let fits = true;
-  if (bestW < MIN_W) {
+  if (bestW < minW) {
     // Troppi video per stare tutti in una schermata: dimensione minima e pagina scorrevole
     fits = false;
-    bestCols = Math.max(1, Math.min(n, Math.floor((W + GAP) / (MIN_W + GAP))));
+    bestCols = Math.max(1, Math.min(n, Math.floor((W + GAP) / (minW + GAP))));
     bestW = (W - GAP * (bestCols - 1)) / bestCols;
   }
 
@@ -536,24 +673,24 @@ function showGrid() {
 
 els.btnStart.addEventListener("click", () => {
   const lines = collectLinks();
-  const ids = [];
+  const sources = [];
   let bad = 0;
 
   lines.forEach((line) => {
-    const id = extractVideoId(line);
-    if (id) ids.push(id);
+    const src = extractSource(line);
+    if (src) sources.push(src);
     else bad++;
   });
 
-  if (!ids.length) {
-    els.msg.textContent = "Nessun link YouTube valido. Hai incollato la lista della spesa?";
+  if (!sources.length) {
+    els.msg.textContent = "Nessun link valido (YouTube o Twitch). Hai incollato la lista della spesa?";
     return;
   }
 
   els.msg.textContent = bad ? `Ignorati ${bad} link non validi.` : "";
 
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lines)); } catch (_) {}
-  startWall(ids);
+  startWall(sources);
 });
 
 els.btnGrid.addEventListener("click", showGrid);
@@ -562,9 +699,7 @@ els.btnShare.addEventListener("click", copyShareLink);
 
 els.btnEdit.addEventListener("click", () => {
   // Rimette nelle righe i link attuali (utile anche a chi è arrivato da un link condiviso)
-  if (state.ids.length) {
-    populateRows(state.ids.map((id) => `https://www.youtube.com/watch?v=${id}`));
-  }
+  if (state.sources.length) populateRows(state.sources.map(sourceUrl));
   destroyWall();
   els.msg.textContent = "";
   els.topbar.classList.add("hidden");
@@ -599,8 +734,8 @@ window.addEventListener("resize", () => {
 
 // Se qualcuno incolla un altro link con hash mentre la pagina è già aperta
 window.addEventListener("hashchange", () => {
-  const ids = getIdsFromHash();
-  if (ids.length && ids.join(",") !== state.ids.join(",")) startWall(ids);
+  const sources = getSourcesFromHash();
+  if (sources.length && hashFor(sources) !== hashFor(state.sources)) startWall(sources);
 });
 
 /* ---------- Avvio ---------- */
@@ -612,6 +747,6 @@ window.addEventListener("hashchange", () => {
   populateRows(loadSavedLinks());
 
   // Se l'URL contiene dei video (link condiviso), parte direttamente il muro
-  const ids = getIdsFromHash();
-  if (ids.length) startWall(ids);
+  const sources = getSourcesFromHash();
+  if (sources.length) startWall(sources);
 })();
