@@ -412,8 +412,18 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 
 .wall.focus .tile {
   grid-column: 2;
+  grid-row: var(--row, auto); /* posizione fissa: non cambia quando cambia il tile in evidenza */
   width: auto;
 }
+
+/* Riquadro vuoto nella posizione lasciata libera dal tile portato in primo piano */
+.tile-ghost {
+  border-style: dashed;
+  opacity: .4;
+  cursor: default;
+  pointer-events: none;
+}
+.tile-ghost .tile-video { background: transparent; }
 
 .wall.focus .tile.focused {
   grid-column: 1;
@@ -563,7 +573,8 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 /* ---------- Mobile ---------- */
 @media (max-width: 800px) {
   .wall.focus { grid-template-columns: 1fr; grid-template-rows: none; }
-  .wall.focus .tile { grid-column: 1; }
+  .wall.focus .tile { grid-column: 1; grid-row: auto; }
+  .tile-ghost { display: none; } /* su mobile è un elenco verticale: niente colonna, niente buco */
   .wall.focus .tile.focused {
     grid-row: auto;
     position: relative;

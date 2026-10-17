@@ -577,6 +577,7 @@ function destroyWall() {
   state.tiles = [];
   state.focusedIndex = null;
   state.audioIndex = null;
+  ghostEl = null; // era già figlio di #wall: innerHTML="" se ne occupa
   els.wall.innerHTML = "";
 }
 
@@ -663,13 +664,39 @@ function updateMainHeight() {
   els.wall.style.setProperty("--main-h", Math.max(h, 240) + "px");
 }
 
+// Il tile in primo piano "libera" la sua posizione nella colonna laterale:
+// agli altri tile viene assegnata una riga fissa (il loro indice originale),
+// così l'ordine non cambia mai cambiando il video in evidenza.
+let ghostEl = null;
+
+function removeGhost() {
+  if (ghostEl) {
+    ghostEl.remove();
+    ghostEl = null;
+  }
+}
+
+// Riquadro vuoto e tratteggiato nella posizione lasciata libera dal tile in primo piano.
+function placeGhost(index) {
+  removeGhost();
+  ghostEl = document.createElement("div");
+  ghostEl.className = "tile tile-ghost";
+  ghostEl.setAttribute("aria-hidden", "true");
+  ghostEl.style.setProperty("--row", String(index + 1));
+  ghostEl.innerHTML = `<div class="tile-head"></div><div class="tile-video"></div>`;
+  els.wall.appendChild(ghostEl);
+}
+
 function focusTile(index) {
   state.focusedIndex = index;
   els.wall.classList.add("focus");
   els.wall.style.minHeight = "";
-  els.wall.style.setProperty("--side-count", Math.max(state.tiles.length - 1, 1));
+  els.wall.style.setProperty("--side-count", state.tiles.length);
+  state.tiles.forEach((t, i) => t.el.style.setProperty("--row", String(i + 1)));
+  placeGhost(index);
   updateMainHeight();
   state.tiles.forEach((t, i) => t.el.classList.toggle("focused", i === index));
+  els.btnGrid.classList.remove("hidden");
   window.scrollTo({ top: 0 });
 }
 
@@ -678,7 +705,12 @@ function showGrid() {
   els.wall.classList.remove("focus");
   els.wall.style.removeProperty("--side-count");
   els.wall.style.removeProperty("--main-h");
-  state.tiles.forEach((t) => t.el.classList.remove("focused"));
+  removeGhost();
+  state.tiles.forEach((t) => {
+    t.el.classList.remove("focused");
+    t.el.style.removeProperty("--row");
+  });
+  els.btnGrid.classList.add("hidden");
   layoutGrid();
 }
 
