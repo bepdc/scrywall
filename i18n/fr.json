@@ -37,6 +37,7 @@
     "twitchFileProtocol": "Twitch a besoin de http(s) : ouvre le site depuis un serveur, pas depuis file://"
   },
   "donate": {
+    "cta": "Offre-moi un café ou une bière, radin",
     "description": "Le site est gratuit. S'il t'est utile, un café ou une bière, c'est toujours apprécié.",
     "customAmountLabel": "Montant libre",
     "customAmountPlaceholder": "ex. 3,50",
