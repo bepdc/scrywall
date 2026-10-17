@@ -6,6 +6,10 @@
   <title>PalantirTube</title>
   <meta name="description" content="Guarda più video YouTube contemporaneamente, in una sola schermata.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23fff2c9'/%3E%3Cstop offset='.3' stop-color='%23f2b24a'/%3E%3Cstop offset='.65' stop-color='%23a24a12'/%3E%3Cstop offset='1' stop-color='%231a0d05'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,6 +24,9 @@
       <button id="btn-mute-all" type="button">🔇 Muta tutti</button>
       <button id="btn-share" type="button" class="accent">🔗 Condividi</button>
       <button id="btn-edit" type="button">Modifica link</button>
+      <button id="donate-top" type="button" class="donate">
+        <span aria-hidden="true">☕🍺</span><span class="donate-text"> Buy me a coffee or a beer</span>
+      </button>
     </div>
   </header>
 
@@ -29,15 +36,54 @@
         <span class="orb orb-big" aria-hidden="true"></span>
         <h1>PalantirTube</h1>
       </div>
-      <p class="tagline">Tutti i tuoi video, sott'occhio.</p>
-      <p>Incolla i link YouTube, uno per riga. Partono tutti insieme e in muto: l'audio lo attivi tu, uno alla volta. Poi puoi copiare un link da mandare a chi vuoi, e vedrà esattamente gli stessi video.</p>
-      <textarea id="links" rows="10" placeholder="https://www.youtube.com/watch?v=...&#10;https://youtu.be/...&#10;https://www.youtube.com/live/..."></textarea>
+      <p class="tagline">Una pietra veggente per i tuoi video.</p>
+
+      <div class="divider" aria-hidden="true"><span>ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ</span></div>
+
+      <p class="intro">
+        Aggiungi i link YouTube, uno per riga: quella vuota in fondo è sempre pronta per il prossimo.
+        Partono tutti insieme e in muto, l'audio lo attivi tu, uno alla volta.
+        Poi puoi copiare un link da mandare a chi vuoi: vedrà gli stessi video.
+      </p>
+
+      <div id="rows" class="rows"></div>
+
       <p id="msg" class="msg"></p>
       <button id="btn-start" type="button" class="primary">▶ Mostra tutti i video</button>
+
+      <div class="setup-footer">
+        <button id="donate-setup" type="button" class="donate">
+          <span aria-hidden="true">☕🍺</span> Buy me a coffee or a beer
+        </button>
+      </div>
     </div>
   </section>
 
   <main id="wall" class="wall hidden"></main>
+
+  <dialog id="donate-dialog" class="dialog">
+    <div class="dialog-body">
+      <button id="donate-close" type="button" class="dialog-x" aria-label="Chiudi">✕</button>
+      <h2>☕ Buy me a coffee or a beer 🍺</h2>
+      <p class="dialog-text">Il sito è gratis. Se ti è utile, un caffè o una birra fanno sempre piacere.</p>
+
+      <div id="donate-options" class="donate-options"></div>
+
+      <div class="donate-custom">
+        <label for="donate-custom-input">Importo libero</label>
+        <div class="donate-custom-row">
+          <div class="amount-field">
+            <input id="donate-custom-input" type="text" inputmode="decimal" placeholder="es. 3,50" autocomplete="off">
+            <span id="donate-currency" class="currency"></span>
+          </div>
+          <button id="donate-custom-go" type="button" class="primary-sm">Vai a PayPal</button>
+        </div>
+        <p id="donate-msg" class="msg"></p>
+      </div>
+
+      <p class="dialog-note">Si apre PayPal in una nuova scheda: il pagamento avviene lì.</p>
+    </div>
+  </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
