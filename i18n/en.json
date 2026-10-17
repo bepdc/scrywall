@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Watch multiple YouTube videos and Twitch streams at once, on a single screen."
+  },
+  "setup": {
+    "tagline": "Many screens, one glance.",
+    "intro": "Add YouTube links or Twitch streams, one per line: the empty one at the bottom is always ready for the next. They all start together, muted — you turn the audio on yourself, one at a time. Then you can copy a link to send to anyone: they'll see the same videos.",
+    "linkPlaceholder": "Paste a YouTube or Twitch link…",
+    "removeLink": "Remove this link",
+    "startButton": "▶ Show all videos",
+    "noValidLinks": "No valid links (YouTube or Twitch). Did you paste the shopping list?",
+    "ignoredLinks": {
+      "one": "Ignored {n} invalid link.",
+      "other": "Ignored {n} invalid links."
+    }
+  },
+  "toolbar": {
+    "grid": "Grid View",
+    "muteAll": "🔇 Mute all",
+    "share": "🔗 Share",
+    "editLink": "Edit links"
+  },
+  "tile": {
+    "loading": "Loading…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Toggle audio",
+    "offline": "{channel} · offline"
+  },
+  "errors": {
+    "youtubeNotFound": "Video not found or private",
+    "youtubeEmbedDisabled": "Embedding disabled by the uploader",
+    "youtubeFileProtocol": "Error 153: open the site via http(s), not file://",
+    "youtubeGeneric": "Playback error",
+    "youtubeUnavailable": "Could not load YouTube",
+    "twitchUnavailable": "{channel} · could not load Twitch",
+    "twitchFileProtocol": "Twitch requires http(s): open the site from a server, not file://"
+  },
+  "donate": {
+    "description": "The site is free. If it's useful to you, a coffee or a beer is always welcome.",
+    "customAmountLabel": "Custom amount",
+    "customAmountPlaceholder": "e.g. 3.50",
+    "goToPaypal": "Go to PayPal",
+    "invalidAmount": "Invalid amount: try something like 3.50",
+    "note": "Opens PayPal in a new tab: payment happens there.",
+    "close": "Close"
+  },
+  "share": {
+    "copied": "Link copied to clipboard",
+    "promptCopy": "Copy the link:"
+  },
+  "common": {
+    "languageLabel": "Language"
+  }
+}

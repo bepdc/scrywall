@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "description": "Guarda più video YouTube e dirette Twitch contemporaneamente, in una sola schermata."
+  },
+  "setup": {
+    "tagline": "Tanti schermi, un solo sguardo.",
+    "intro": "Aggiungi i link di YouTube o le dirette di Twitch, uno per riga: quella vuota in fondo è sempre pronta per il prossimo. Partono tutti insieme e in muto, l'audio lo attivi tu, uno alla volta. Poi puoi copiare un link da mandare a chi vuoi: vedrà gli stessi video.",
+    "linkPlaceholder": "Incolla un link YouTube o Twitch…",
+    "removeLink": "Rimuovi questo link",
+    "startButton": "▶ Mostra tutti i video",
+    "noValidLinks": "Nessun link valido (YouTube o Twitch). Hai incollato la lista della spesa?",
+    "ignoredLinks": {
+      "one": "Ignorato {n} link non valido.",
+      "other": "Ignorati {n} link non validi."
+    }
+  },
+  "toolbar": {
+    "grid": "Visualizzazione Griglia",
+    "muteAll": "🔇 Muta tutti",
+    "share": "🔗 Condividi",
+    "editLink": "Modifica link"
+  },
+  "tile": {
+    "loading": "Caricamento…",
+    "youtube": "YouTube",
+    "twitch": "Twitch",
+    "muteToggle": "Attiva/disattiva audio",
+    "offline": "{channel} · offline"
+  },
+  "errors": {
+    "youtubeNotFound": "Video non trovato o privato",
+    "youtubeEmbedDisabled": "Incorporamento disattivato dall'autore",
+    "youtubeFileProtocol": "Errore 153: apri il sito via http(s), non da file://",
+    "youtubeGeneric": "Errore di riproduzione",
+    "youtubeUnavailable": "Impossibile caricare YouTube",
+    "twitchUnavailable": "{channel} · impossibile caricare Twitch",
+    "twitchFileProtocol": "Twitch richiede http(s): apri il sito da un server, non da file://"
+  },
+  "donate": {
+    "description": "Il sito è gratis. Se ti è utile, un caffè o una birra fanno sempre piacere.",
+    "customAmountLabel": "Importo libero",
+    "customAmountPlaceholder": "es. 3,50",
+    "goToPaypal": "Vai a PayPal",
+    "invalidAmount": "Importo non valido: scrivi ad esempio 3,50",
+    "note": "Si apre PayPal in una nuova scheda: il pagamento avviene lì.",
+    "close": "Chiudi"
+  },
+  "share": {
+    "copied": "Link copiato negli appunti",
+    "promptCopy": "Copia il link:"
+  },
+  "common": {
+    "languageLabel": "Lingua"
+  }
+}

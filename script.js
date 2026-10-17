@@ -1,5 +1,7 @@
 "use strict";
 
+import { initI18n, t, formatMoney, currencySymbol, registerLanguageSelect } from "./i18n/i18n.js";
+
 /* =====================================================================
    ⚙️  CONFIGURAZIONE
    ===================================================================== */
@@ -55,6 +57,8 @@ const els = {
   donateGo: document.getElementById("donate-custom-go"),
   donateMsg: document.getElementById("donate-msg"),
   donateCurrency: document.getElementById("donate-currency"),
+  langSelectTopbar: document.getElementById("lang-select-topbar"),
+  langSelectSetup: document.getElementById("lang-select-setup"),
 };
 
 const state = {
@@ -171,15 +175,6 @@ function showToast(text) {
 
 /* ---------- Donazioni (PayPal.me) ---------- */
 
-function formatMoney(amount) {
-  return new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: DONATION_CURRENCY,
-    minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
 function paypalUrl(amount) {
   const base = PAYPAL_ME_URL.replace(/\/+$/, "");
   if (amount == null) return base; // nessun importo: sceglie l'utente su PayPal
@@ -189,10 +184,10 @@ function paypalUrl(amount) {
 
 // null = campo vuoto, NaN = importo non valido, altrimenti il numero
 function parseAmount(text) {
-  const t = text.trim().replace(/\s/g, "").replace(",", ".");
-  if (!t) return null;
-  if (!/^\d+(\.\d{1,2})?$/.test(t)) return NaN;
-  const v = parseFloat(t);
+  const clean = text.trim().replace(/\s/g, "").replace(",", ".");
+  if (!clean) return null;
+  if (!/^\d+(\.\d{1,2})?$/.test(clean)) return NaN;
+  const v = parseFloat(clean);
   return v > 0 && v <= 1000 ? v : NaN;
 }
 
@@ -204,16 +199,11 @@ function buildDonateDialog() {
     a.href = paypalUrl(amount);
     a.target = "_blank";
     a.rel = "noopener noreferrer";
-    a.textContent = `${emoji} ${formatMoney(amount)}`;
+    a.textContent = `${emoji} ${formatMoney(amount, DONATION_CURRENCY)}`;
     els.donateOptions.appendChild(a);
   });
 
-  const parts = new Intl.NumberFormat("it-IT", {
-    style: "currency",
-    currency: DONATION_CURRENCY,
-  }).formatToParts(0);
-  const cur = parts.find((p) => p.type === "currency");
-  els.donateCurrency.textContent = cur ? cur.value : DONATION_CURRENCY;
+  els.donateCurrency.textContent = currencySymbol(DONATION_CURRENCY);
 }
 
 function openDonateDialog() {
@@ -224,7 +214,7 @@ function openDonateDialog() {
 function goCustomDonation() {
   const amount = parseAmount(els.donateInput.value);
   if (Number.isNaN(amount)) {
-    els.donateMsg.textContent = "Importo non valido: scrivi ad esempio 3,50";
+    els.donateMsg.textContent = t("donate.invalidAmount");
     return;
   }
   els.donateMsg.textContent = "";
@@ -239,7 +229,8 @@ function createRow(value = "") {
 
   const input = document.createElement("input");
   input.type = "text";
-  input.placeholder = "Incolla un link YouTube o Twitch…";
+  input.setAttribute("data-i18n-attr", "placeholder:setup.linkPlaceholder");
+  input.placeholder = t("setup.linkPlaceholder");
   input.value = value;
   input.autocomplete = "off";
   input.spellcheck = false;
@@ -248,8 +239,9 @@ function createRow(value = "") {
   del.type = "button";
   del.className = "row-del";
   del.textContent = "✕";
-  del.title = "Rimuovi questo link";
-  del.setAttribute("aria-label", "Rimuovi questo link");
+  del.setAttribute("data-i18n-attr", "title:setup.removeLink,aria-label:setup.removeLink");
+  del.title = t("setup.removeLink");
+  del.setAttribute("aria-label", t("setup.removeLink"));
 
   row.append(input, del);
 
@@ -376,10 +368,10 @@ async function copyShareLink() {
   const url = buildShareUrl();
   try {
     await navigator.clipboard.writeText(url);
-    showToast("Link copiato negli appunti");
+    showToast(t("share.copied"));
   } catch {
     // Fallback se il browser non permette l'accesso agli appunti
-    window.prompt("Copia il link:", url);
+    window.prompt(t("share.promptCopy"), url);
   }
 }
 
@@ -420,11 +412,11 @@ function trackTitle(tile) {
 
 function describeYouTubeError(code) {
   switch (code) {
-    case 100: return "Video non trovato o privato";
+    case 100: return t("errors.youtubeNotFound");
     case 101:
-    case 150: return "Incorporamento disattivato dall'autore";
-    case 153: return "Errore 153: apri il sito via http(s), non da file://";
-    default:  return "Errore di riproduzione";
+    case 150: return t("errors.youtubeEmbedDisabled");
+    case 153: return t("errors.youtubeFileProtocol");
+    default:  return t("errors.youtubeGeneric");
   }
 }
 
@@ -432,7 +424,7 @@ function describeYouTubeError(code) {
 
 function createYouTubeTile(tile, slotId) {
   if (!(window.YT && window.YT.Player)) {
-    markError(tile, "Impossibile caricare YouTube");
+    markError(tile, t("errors.youtubeUnavailable"));
     return;
   }
 
@@ -476,11 +468,11 @@ function createTwitchTile(tile, slotId) {
   setLabel(tile, channel); // Twitch non fornisce il titolo della diretta: si mostra il nome del canale
 
   if (!(window.Twitch && window.Twitch.Player)) {
-    markError(tile, `${channel} · impossibile caricare Twitch`);
+    markError(tile, t("errors.twitchUnavailable", { channel }));
     return;
   }
   if (!location.hostname) {
-    markError(tile, "Twitch richiede http(s): apri il sito da un server, non da file://");
+    markError(tile, t("errors.twitchFileProtocol"));
     return;
   }
 
@@ -495,7 +487,7 @@ function createTwitchTile(tile, slotId) {
   tile.player = player;
 
   player.addEventListener(Twitch.Player.READY, () => { tile.ready = true; });
-  player.addEventListener(Twitch.Player.OFFLINE, () => setLabel(tile, `${channel} · offline`));
+  player.addEventListener(Twitch.Player.OFFLINE, () => setLabel(tile, t("tile.offline", { channel })));
   player.addEventListener(Twitch.Player.ONLINE, () => setLabel(tile, channel));
 
   tile.setMuted = (muted) => {
@@ -532,9 +524,9 @@ async function startWall(sources) {
     tileEl.className = "tile";
     tileEl.innerHTML = `
       <div class="tile-head">
-        <span class="badge ${src.type}" title="${src.type === "tw" ? "Twitch" : "YouTube"}"></span>
-        <span class="label">Caricamento…</span>
-        <button class="mute" type="button" title="Attiva/disattiva audio">🔇</button>
+        <span class="badge ${src.type}" data-i18n-attr="title:tile.${src.type === "tw" ? "twitch" : "youtube"}" title="${t(src.type === "tw" ? "tile.twitch" : "tile.youtube")}"></span>
+        <span class="label">${t("tile.loading")}</span>
+        <button class="mute" type="button" data-i18n-attr="title:tile.muteToggle" title="${t("tile.muteToggle")}">🔇</button>
       </div>
       <div class="tile-video">
         <div class="player-slot" id="${slotId}"></div>
@@ -704,11 +696,11 @@ els.btnStart.addEventListener("click", () => {
   });
 
   if (!sources.length) {
-    els.msg.textContent = "Nessun link valido (YouTube o Twitch). Hai incollato la lista della spesa?";
+    els.msg.textContent = t("setup.noValidLinks");
     return;
   }
 
-  els.msg.textContent = bad ? `Ignorati ${bad} link non validi.` : "";
+  els.msg.textContent = bad ? t("setup.ignoredLinks", { n: bad }) : "";
 
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(lines)); } catch (_) {}
   startWall(sources);
@@ -759,15 +751,21 @@ window.addEventListener("hashchange", () => {
   if (sources.length && hashFor(sources) !== hashFor(state.sources)) startWall(sources);
 });
 
+// Cambiare lingua non deve interrompere video/audio: solo gli importi
+// delle donazioni (formattati col locale) vanno rigenerati.
+document.addEventListener("scrywall:langchange", buildDonateDialog);
+
 /* ---------- Avvio ---------- */
 
-(function init() {
-  buildDonateDialog();
+await initI18n();
+if (els.langSelectTopbar) registerLanguageSelect(els.langSelectTopbar);
+if (els.langSelectSetup) registerLanguageSelect(els.langSelectSetup);
 
-  // Ultimi link inseriti a mano su questo browser (più la riga vuota in fondo)
-  populateRows(loadSavedLinks());
+buildDonateDialog();
 
-  // Se l'URL contiene dei video (link condiviso), parte direttamente il muro
-  const sources = getSourcesFromHash();
-  if (sources.length) startWall(sources);
-})();
+// Ultimi link inseriti a mano su questo browser (più la riga vuota in fondo)
+populateRows(loadSavedLinks());
+
+// Se l'URL contiene dei video (link condiviso), parte direttamente il muro
+const sources = getSourcesFromHash();
+if (sources.length) startWall(sources);
