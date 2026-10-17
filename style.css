@@ -1,5 +1,5 @@
 :root {
-  --bg: #090b12;
+  --bg: #0a0a18;
   --surface: rgba(255, 255, 255, .045);
   --surface-hover: rgba(255, 255, 255, .09);
   --border: rgba(255, 255, 255, .11);
@@ -8,7 +8,7 @@
   --gold: #e3b95f;
   --accent: #f0b94a;
   --accent-soft: rgba(240, 185, 74, .38);
-  --teal: #7be0c3;
+  --teal: #8fb4ff;
   --danger: #ff8a73;
   --yt: #ff5a4d;
   --tw: #9146ff;
@@ -31,43 +31,38 @@ html, body {
 
 body {
   background:
-    radial-gradient(900px 500px at 50% -180px, rgba(240, 185, 74, .14), transparent 70%),
-    radial-gradient(700px 500px at 0% 100%, rgba(80, 200, 170, .09), transparent 70%),
-    radial-gradient(700px 500px at 100% 60%, rgba(120, 90, 220, .09), transparent 70%),
+    radial-gradient(1.2px 1.2px at 12% 22%, rgba(255, 240, 200, .8), transparent),
+    radial-gradient(1px 1px at 28% 68%, rgba(255, 240, 200, .6), transparent),
+    radial-gradient(1.4px 1.4px at 41% 12%, rgba(255, 240, 200, .75), transparent),
+    radial-gradient(1px 1px at 57% 83%, rgba(255, 240, 200, .55), transparent),
+    radial-gradient(1.2px 1.2px at 73% 31%, rgba(255, 240, 200, .7), transparent),
+    radial-gradient(1px 1px at 86% 74%, rgba(255, 240, 200, .6), transparent),
+    radial-gradient(1.3px 1.3px at 93% 14%, rgba(255, 240, 200, .75), transparent),
+    radial-gradient(1px 1px at 5% 90%, rgba(255, 240, 200, .5), transparent),
+    radial-gradient(900px 520px at 50% -180px, rgba(240, 185, 74, .13), transparent 70%),
+    radial-gradient(700px 500px at 0% 100%, rgba(90, 80, 220, .16), transparent 70%),
+    radial-gradient(700px 500px at 100% 60%, rgba(140, 90, 220, .13), transparent 70%),
     var(--bg);
   background-attachment: fixed;
 }
 
 .hidden { display: none !important; }
 
-/* ---------- Orb (logo) ---------- */
+/* ---------- Occhio della divinazione (logo) ---------- */
 .orb {
   display: inline-block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 30px;
+  height: 30px;
   flex: none;
-  background: radial-gradient(circle at 35% 30%, #fff2c9 0, #f2b24a 28%, #a24a12 62%, #1a0d05 100%);
-  box-shadow: 0 0 10px rgba(240, 185, 74, .45);
-  animation: glow 4s ease-in-out infinite;
-  position: relative;
-  overflow: hidden;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Cdefs%3E%3CradialGradient%20id='i'%20cx='40%25'%20cy='35%25'%20r='70%25'%3E%3Cstop%20offset='0'%20stop-color='%23fff2c9'/%3E%3Cstop%20offset='.5'%20stop-color='%23f0b94a'/%3E%3Cstop%20offset='1'%20stop-color='%23a24a12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx='32'%20cy='32'%20r='30'%20fill='none'%20stroke='%23e3b95f'%20stroke-opacity='.55'%20stroke-width='1.5'/%3E%3Cpath%20d='M32%205v7M15%2011l3%205.5M49%2011l-3%205.5'%20stroke='%23e3b95f'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M7%2034Q32%2012%2057%2034Q32%2056%207%2034Z'%20fill='%23120f26'%20stroke='%23f0b94a'%20stroke-width='2.5'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='32'%20cy='34'%20r='10.5'%20fill='url(%23i)'/%3E%3Cpath%20d='M32%2027L33.8%2032.2L39%2034L33.8%2035.8L32%2041L30.2%2035.8L25%2034L30.2%2032.2Z'%20fill='%23120f26'/%3E%3C/svg%3E") center / contain no-repeat;
+  filter: drop-shadow(0 0 4px rgba(240, 185, 74, .45));
+  animation: glow 5s ease-in-out infinite;
 }
-/* griglia di "finestre" dentro la sfera: il muro di schermi */
-.orb::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(var(--bg, #090b12), var(--bg, #090b12)) center / 8% 100% no-repeat,
-    linear-gradient(var(--bg, #090b12), var(--bg, #090b12)) center / 100% 8% no-repeat;
-  opacity: .75;
-}
-.orb-big { width: 46px; height: 46px; }
+.orb-big { width: 56px; height: 56px; }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(240, 185, 74, .35); }
-  50%      { box-shadow: 0 0 22px rgba(240, 185, 74, .7); }
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(240, 185, 74, .35)); }
+  50%      { filter: drop-shadow(0 0 10px rgba(240, 185, 74, .8)); }
 }
 
 .brand { display: flex; align-items: center; gap: 12px; }
@@ -88,7 +83,24 @@ body {
   padding: 24px;
 }
 
+.setup { position: relative; overflow: hidden; }
+/* cerchi concentrici sottili, come un astrolabio, dietro la card */
+.setup::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: min(980px, 130vw);
+  height: min(980px, 130vw);
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 70px, rgba(240, 185, 74, .08) 71px 72px);
+  -webkit-mask-image: radial-gradient(circle, #000 25%, transparent 68%);
+  mask-image: radial-gradient(circle, #000 25%, transparent 68%);
+  pointer-events: none;
+}
+
 .setup-card {
+  position: relative;
   width: min(680px, 100%);
   background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .025));
   backdrop-filter: blur(14px);
