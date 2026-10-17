@@ -291,6 +291,10 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 
 /* ---------- Topbar ---------- */
 .topbar {
+  position: relative; /* backdrop-filter crea un contesto di stacking: senza position
+                          la topbar resta "non posizionata" e il <main> (dopo nel DOM)
+                          la ricoprirebbe comunque, tendina lingua compresa */
+  z-index: 20;
   min-height: var(--topbar-h);
   display: flex;
   align-items: center;
