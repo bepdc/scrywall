@@ -469,11 +469,6 @@ function createYouTubeTile(tile, slotId) {
       tile.player.setVolume(100);
     }
   };
-
-  // Se l'utente tocca l'audio dalla barra di YouTube su un riquadro che deve restare muto
-  tile.enforceMute = () => {
-    if (tile.player.isMuted() === false) tile.player.mute();
-  };
 }
 
 function createTwitchTile(tile, slotId) {
@@ -506,10 +501,6 @@ function createTwitchTile(tile, slotId) {
   tile.setMuted = (muted) => {
     player.setMuted(muted);
     if (!muted) player.setVolume(1);
-  };
-
-  tile.enforceMute = () => {
-    if (player.getMuted() === false) player.setMuted(true);
   };
 }
 
@@ -562,7 +553,6 @@ async function startWall(sources) {
       muteBtn: tileEl.querySelector(".mute"),
       player: null,
       setMuted: () => {},
-      enforceMute: () => {},
     };
 
     if (src.type === "tw") createTwitchTile(tile, slotId);
@@ -584,34 +574,10 @@ async function startWall(sources) {
     state.tiles.push(tile);
   });
 
-  startMuteWatchdog();
   showGrid();
 }
 
-// I player non avvisano quando l'utente cambia il volume dai loro controlli
-// (succede nel riquadro in primo piano, dove lo scudo è disattivato):
-// ogni mezzo secondo si riporta a muto tutto ciò che non ha l'audio attivo.
-let muteWatchdog = null;
-
-function startMuteWatchdog() {
-  stopMuteWatchdog();
-  muteWatchdog = setInterval(() => {
-    // dopo un cambio di audio i player aggiornano il loro stato in modo asincrono: si aspetta
-    if (Date.now() - (state.audioChangedAt || 0) < 1500) return;
-    state.tiles.forEach((t, i) => {
-      if (!t.ready || t.dead || i === state.audioIndex) return;
-      try { t.enforceMute(); } catch (_) { /* player non pronto */ }
-    });
-  }, 500);
-}
-
-function stopMuteWatchdog() {
-  if (muteWatchdog) clearInterval(muteWatchdog);
-  muteWatchdog = null;
-}
-
 function destroyWall() {
-  stopMuteWatchdog();
   state.tiles.forEach((t) => {
     t.dead = true;
     try { if (t.src.type === "yt") t.player.destroy(); } catch (_) { /* pazienza */ }
@@ -626,7 +592,6 @@ function destroyWall() {
 
 function setAudio(index) {
   state.audioIndex = index;
-  state.audioChangedAt = Date.now();
   state.tiles.forEach((t, i) => {
     const on = i === index;
     if (t.ready) {
@@ -636,6 +601,27 @@ function setAudio(index) {
     t.el.classList.toggle("has-audio", on);
   });
 }
+
+// I controlli nativi di YouTube/Twitch dentro l'iframe permettono di smutare o
+// alzare il volume bypassando il pulsante del sito. L'IFrame API non offre un
+// evento "volume cambiato", quindi si forza il muto a intervalli su ogni tile
+// che il sito considera non attivo: solo il tile scelto col pulsante del sito
+// resta libero di seguire il volume nativo di YouTube/Twitch.
+function enforceMute() {
+  state.tiles.forEach((t, i) => {
+    if (t.dead || !t.ready || !t.player) return;
+    if (state.audioIndex === i) return; // qui comanda il controllo nativo della piattaforma
+    try {
+      if (t.src.type === "yt") {
+        if (!t.player.isMuted()) t.player.mute();
+      } else if (t.src.type === "tw") {
+        if (!t.player.getMuted()) t.player.setMuted(true);
+      }
+    } catch (_) { /* player non pronto */ }
+  });
+}
+
+setInterval(enforceMute, 200);
 
 /* ---------- Layout ---------- */
 
