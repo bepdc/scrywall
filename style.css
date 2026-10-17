@@ -1,0 +1,259 @@
+:root {
+  --bg: #0b0d11;
+  --panel: #151920;
+  --border: #272d38;
+  --text: #e8eaed;
+  --muted: #9aa0a6;
+  --accent: #f0a640;       /* ambra: l'unica nota "palantír", il resto è sobrio */
+  --accent-soft: rgba(240, 166, 64, .35);
+  --topbar-h: 56px;
+  --side-w: 300px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 50% -150px, rgba(240, 166, 64, .08), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- Orb (logo) ---------- */
+.orb {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  flex: none;
+  background: radial-gradient(circle at 35% 30%, #fff2c9 0, #f2b24a 28%, #a24a12 62%, #1a0d05 100%);
+  box-shadow: 0 0 10px rgba(240, 166, 64, .45);
+  animation: glow 4s ease-in-out infinite;
+}
+.orb-big { width: 44px; height: 44px; box-shadow: 0 0 18px rgba(240, 166, 64, .5); }
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(240, 166, 64, .35); }
+  50%      { box-shadow: 0 0 16px rgba(240, 166, 64, .65); }
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-name { font-size: 17px; font-weight: 650; letter-spacing: .02em; }
+
+/* ---------- Setup ---------- */
+.setup {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.setup-card {
+  width: min(720px, 100%);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .4);
+}
+
+.brand-big { margin-bottom: 4px; }
+.setup-card h1 { margin: 0; font-size: 28px; letter-spacing: .01em; }
+.tagline { color: var(--accent) !important; margin: 4px 0 16px; font-weight: 500; }
+.setup-card p { color: var(--muted); line-height: 1.5; }
+
+textarea {
+  width: 100%;
+  background: #0a0c0f;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 14px;
+  resize: vertical;
+}
+textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+.msg { min-height: 1.4em; color: #ffb454 !important; font-size: 14px; }
+
+button {
+  background: #202530;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+button:hover { background: #2a303d; }
+button.accent { border-color: var(--accent); color: var(--accent); }
+button.accent:hover { background: rgba(240, 166, 64, .12); }
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1a1100;
+  font-weight: 650;
+  padding: 12px 20px;
+}
+button.primary:hover { filter: brightness(1.08); background: var(--accent); }
+
+/* ---------- Topbar ---------- */
+.topbar {
+  min-height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(21, 25, 32, .92);
+  border-bottom: 1px solid var(--border);
+}
+.topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- Wall (modalità griglia) ---------- */
+.wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 8px;
+  padding: 8px;
+}
+
+.tile {
+  position: relative;
+  background: #000;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.tile iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Strato trasparente che intercetta il click (altrimenti l'iframe se lo mangia) */
+.shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: linear-gradient(rgba(0,0,0,.75), transparent);
+  pointer-events: none;
+}
+.bar .label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-shadow: 0 1px 2px #000;
+}
+.bar .mute {
+  pointer-events: auto;
+  padding: 4px 10px;
+  font-size: 15px;
+  background: rgba(0,0,0,.6);
+}
+
+/* Il video con l'audio attivo ha un alone ambra */
+.tile.has-audio {
+  border-color: var(--accent);
+  box-shadow: 0 0 18px var(--accent-soft);
+}
+
+/* ---------- Modalità focus ---------- */
+.wall.focus {
+  grid-template-columns: minmax(0, 1fr) var(--side-w);
+  grid-template-rows: repeat(var(--side-count, 1), minmax(150px, auto));
+  align-items: start;
+}
+
+.wall.focus .tile {
+  grid-column: 2;
+  aspect-ratio: 16 / 9;
+}
+
+.wall.focus .tile.focused {
+  grid-column: 1;
+  grid-row: 1 / span var(--side-count, 1);
+  aspect-ratio: auto;
+  height: calc(100vh - var(--topbar-h) - 16px);
+  position: sticky;
+  top: 8px;
+  cursor: default;
+}
+
+/* Nel video principale lo schermo trasparente sparisce: si usano i controlli YouTube */
+.wall.focus .tile.focused .shield { display: none; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translate(-50%, 20px);
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 50;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Mobile ---------- */
+@media (max-width: 800px) {
+  .wall { grid-template-columns: 1fr; }
+  .wall.focus { grid-template-columns: 1fr; grid-template-rows: none; }
+  .wall.focus .tile { grid-column: 1; }
+  .wall.focus .tile.focused {
+    grid-row: auto;
+    position: relative;
+    top: 0;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .brand-name { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb { animation: none; }
+  .tile, .toast { transition: none; }
+}

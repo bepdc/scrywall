@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PalantirTube</title>
+  <meta name="description" content="Guarda più video YouTube contemporaneamente, in una sola schermata.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='g' cx='35%25' cy='30%25' r='75%25'%3E%3Cstop offset='0' stop-color='%23fff2c9'/%3E%3Cstop offset='.3' stop-color='%23f2b24a'/%3E%3Cstop offset='.65' stop-color='%23a24a12'/%3E%3Cstop offset='1' stop-color='%231a0d05'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='14' fill='url(%23g)'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header id="topbar" class="topbar hidden">
+    <div class="brand">
+      <span class="orb" aria-hidden="true"></span>
+      <span class="brand-name">PalantirTube</span>
+    </div>
+    <div class="actions">
+      <button id="btn-grid" type="button">Griglia</button>
+      <button id="btn-mute-all" type="button">🔇 Muta tutti</button>
+      <button id="btn-share" type="button" class="accent">🔗 Condividi</button>
+      <button id="btn-edit" type="button">Modifica link</button>
+    </div>
+  </header>
+
+  <section id="setup" class="setup">
+    <div class="setup-card">
+      <div class="brand brand-big">
+        <span class="orb orb-big" aria-hidden="true"></span>
+        <h1>PalantirTube</h1>
+      </div>
+      <p class="tagline">Tutti i tuoi video, sott'occhio.</p>
+      <p>Incolla i link YouTube, uno per riga. Partono tutti insieme e in muto: l'audio lo attivi tu, uno alla volta. Poi puoi copiare un link da mandare a chi vuoi, e vedrà esattamente gli stessi video.</p>
+      <textarea id="links" rows="10" placeholder="https://www.youtube.com/watch?v=...&#10;https://youtu.be/...&#10;https://www.youtube.com/live/..."></textarea>
+      <p id="msg" class="msg"></p>
+      <button id="btn-start" type="button" class="primary">▶ Mostra tutti i video</button>
+    </div>
+  </section>
+
+  <main id="wall" class="wall hidden"></main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
