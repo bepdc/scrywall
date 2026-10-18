@@ -1,5 +1,11 @@
 <div align="center">
 
+🇮🇹 **Italiano** · [🇬🇧 English](README.en.md) · [🇪🇸 Español](README.es.md) · [🇫🇷 Français](README.fr.md) · [🇩🇪 Deutsch](README.de.md) · [🇧🇷 Português (Brasil)](README.pt-BR.md)
+
+</div>
+
+<div align="center">
+
 # 👁️ Scrywall
 
 **Tanti schermi, un solo sguardo.**
@@ -21,12 +27,17 @@ Tutti insieme, tutti muti, l'audio lo accendi tu: uno alla volta.
 *Scry* (inglese): guardare luoghi lontani in una sfera di cristallo. Scrywall è la stessa idea, ma con un muro di schermi: incolli i link, premi un bottone e tieni d'occhio tutto insieme.
 
 - 🧱 **Griglia automatica.** Tutti i riquadri hanno la stessa dimensione e il sito sceglie da solo la disposizione che sfrutta meglio lo schermo. Se i video sono troppi per stare tutti, passa allo scorrimento.
-- 🔇 **Tutto muto, audio a turni.** I video partono senza audio. Con il pulsante su ogni riquadro attivi l'audio di uno solo, e le altre sorgenti restano mute.
-- 🔍 **Click per ingrandire.** Premi un riquadro e va in primo piano, mentre gli altri si dispongono in una colonna a destra. Con "Visualizzazione Griglia" torni alla vista d'insieme.
+- 🔇 **Tutto muto, audio a turni.** I video partono senza audio. Con il pulsante su ogni riquadro attivi l'audio di uno solo, e le altre sorgenti restano mute automaticamente.
+- ⤢ **Pulsante per ingrandire.** Ogni riquadro ha un bottone dedicato: lo ingrandisce mettendo gli altri in una colonna a destra, e lo stesso bottone (o il tasto `Esc`) lo riduce di nuovo.
+- 🎬 **Controlli nativi del player.** Play, pausa e avanzamento sono quelli veri di YouTube/Twitch, utilizzabili direttamente su ogni riquadro, anche piccolo.
+- 🖐️ **Trascina per riordinare.** Tieni premuta l'intestazione di un riquadro e trascinalo su un altro per scambiarli di posto.
+- ✎ **Gestisci tutto dal muro.** Aggiungi un video dalla barra in alto, modifica un link con la matita o rimuovilo con la ✕ (con "Annulla" per qualche secondo) senza mai toccare gli altri video già in riproduzione.
+- ⌨️ **Scorciatoie da tastiera.** `k` play/pausa, `j`/`l` indietro/avanti di 10s, `m` muto, `,`/`.` piccoli aggiustamenti, sul video su cui passi col mouse.
+- 🔁 **Loop regolabile.** I video YouTube ripartono da soli quando finiscono; si disattiva con un click dalla barra in alto.
+- 🌍 **Interfaccia in 6 lingue.** Italiano, inglese, spagnolo, francese, tedesco e portoghese (Brasile), rilevata automaticamente dal browser o selezionabile a mano.
 - 🟥🟪 **YouTube e Twitch insieme.** Video, live, Shorts e dirette Twitch nello stesso muro.
 - 🏷️ **Titolo fuori dal video.** Sopra ogni riquadro c'è il titolo del video, così non copre l'immagine. Per Twitch viene mostrato il nome del canale.
 - 🔗 **Link da condividere.** Chi prepara il muro copia un link, e chi lo apre vede gli stessi video. Niente account, niente server.
-- ✍️ **Righe per i link.** Una riga per ogni link, con quella vuota in fondo sempre pronta. Puoi incollare più link insieme, rimuoverne uno qualsiasi e i link si salvano nel browser.
 - ☕🍺 **Donazioni.** Un pulsante "Buy me a coffee or a beer" con importi rapidi o libero, tramite PayPal.me.
 
 ## 🚀 Provalo in locale
@@ -42,28 +53,14 @@ Poi apri `http://localhost:8000`.
 
 > **Nota:** aprendo `index.html` con un doppio click (indirizzo `file://`) i player di YouTube e Twitch possono rifiutarsi di partire. Usa sempre il server locale.
 
-## 🌐 Pubblicarlo su GitHub Pages
-
-1. Carica `index.html`, `style.css` e `script.js` nella radice del repository.
-2. Vai su **Settings → Pages**.
-3. In **Source** scegli **Deploy from a branch**, poi il branch `main` e la cartella `/ (root)`.
-4. Dopo qualche minuto il sito è online su `https://<utente>.github.io/<repository>/`.
-
-### Dominio personalizzato
-
-1. In **Settings → Pages → Custom domain** inserisci il dominio e salva.
-2. Dal pannello DNS del tuo registrar aggiungi i record `A` verso gli indirizzi di GitHub Pages (`185.199.108.153`, `.109.153`, `.110.153`, `.111.153`) e un `CNAME` per `www` verso `<utente>.github.io`.
-3. Quando il certificato è pronto, attiva **Enforce HTTPS**. Può servire fino a 24 ore.
-
-> Twitch incorpora i player solo sul dominio da cui parte la pagina. Il sito usa automaticamente quello corrente, quindi non devi configurare niente.
-
 ## 🧙 Come usarlo
 
 1. Incolla un link YouTube o Twitch in una riga. Quella vuota in fondo si riempie al prossimo link.
 2. Premi **▶ Mostra tutti i video**.
-3. Accendi l'audio con il pulsante 🔇 di un riquadro. Con **Muta tutti** li spegni tutti.
-4. Premi un riquadro per ingrandirlo, oppure **Visualizzazione Griglia** per tornare alla vista d'insieme.
-5. Premi **🔗 Condividi** per copiare il link con i video già dentro.
+3. Accendi l'audio con il pulsante 🔇/🔊 di un riquadro: si spegne da solo sugli altri.
+4. Premi **⤢** su un riquadro per ingrandirlo, **⤡** (o `Esc`) per tornare alla griglia. Trascina l'intestazione di una card su un'altra per scambiarle di posto.
+5. Dal muro puoi anche: **+ Aggiungi video** dalla barra in alto, **✎** per modificare un link, **✕** per rimuoverlo (con "Annulla"), o la modalità **Seleziona** per rimuoverne più di uno insieme.
+6. Premi **🔗 Condividi** per copiare il link con i video già dentro.
 
 ### Link accettati
 
@@ -88,7 +85,8 @@ https://tuodominio.it/#v=dQw4w9WgXcQ,t:nomecanale,aBcDeFgHiJk
 - HTML, CSS e JavaScript puri, in tre file separati. Nessun framework, nessun bundler.
 - [YouTube IFrame Player API](https://developers.google.com/youtube/iframe_api_reference) e [Twitch Embed](https://dev.twitch.tv/docs/embed/) per i player.
 - Algoritmo di griglia che prova tutte le combinazioni di colonne e righe e sceglie quella con i riquadri più grandi, mantenendo il formato 16:9.
-- Uno "scudo" trasparente sopra ogni video cattura i click, perché gli iframe non li lasciano passare.
+- I comandi del player sono quelli nativi: in griglia resta un sottile livello di sicurezza che impedisce di smutare più video insieme, mentre un controllo in background tiene sincronizzato lo stato del sito con quello reale del player invece di forzarlo.
+- Il trascinamento per riordinare non sposta mai l'iframe nel DOM (altrimenti si ricaricherebbe da capo): cambia solo l'ordine visivo via CSS.
 - I link salvati restano nel `localStorage` del tuo browser. Nessun tracciamento, nessun cookie.
 
 ## ⚠️ Cose da sapere
