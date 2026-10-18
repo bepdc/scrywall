@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Compartilhar",
     "loopOn": "🔁 Loop ativado",
-    "loopOff": "🔁 Loop desativado"
+    "loopOff": "🔁 Loop desativado",
+    "home": "Voltar ao início"
   },
   "tile": {
     "loading": "Carregando…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Idioma"
+  },
+  "footer": {
+    "rights": "Projeto independente, não afiliado nem endossado pelo YouTube, Google ou Twitch. Os vídeos continuam sendo de seus respectivos donos."
+  },
+  "tour": {
+    "next": "Próximo",
+    "back": "Voltar",
+    "skip": "Pular o tour",
+    "done": "Concluir",
+    "progress": "{current} de {total}",
+    "replay": "Ver o tour de novo",
+    "setup": {
+      "welcome": {
+        "title": "Boas-vindas ao Scrywall 👁️",
+        "body": "Muitos vídeos e lives, todos em uma só tela. Vou te mostrar como funciona em poucos passos: você pode pular quando quiser."
+      },
+      "links": {
+        "title": "Cole seus links",
+        "body": "Um link do YouTube ou da Twitch por linha. A linha vazia no final está sempre pronta para o próximo, e você pode colar vários de uma vez."
+      },
+      "start": {
+        "title": "Ligue o painel",
+        "body": "Aperte aqui e os vídeos começam todos juntos, sem som. Você ativa o áudio, um de cada vez."
+      },
+      "language": {
+        "title": "Seu idioma",
+        "body": "O Scrywall fala 6 idiomas: troque por aqui quando quiser."
+      },
+      "donate": {
+        "title": "Um café ou uma cerveja?",
+        "body": "O site é gratuito. Se ele for útil pra você, dá pra me pagar algo por aqui."
+      },
+      "replay": {
+        "title": "Ver o tour de novo",
+        "body": "Se esquecer de algo, o tour está sempre aqui."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Este é o seu painel",
+        "body": "Todos os vídeos começaram mudos. Vamos ver rapidinho o que dá pra fazer daqui."
+      },
+      "add": {
+        "title": "Adicione sem recomeçar",
+        "body": "Cole um link aqui para adicionar um vídeo: os que já estão tocando não param."
+      },
+      "tile": {
+        "title": "Cada quadro é um vídeo",
+        "body": "Play, pausa e avanço são os controles originais do YouTube e da Twitch: use direto no vídeo."
+      },
+      "head": {
+        "title": "A barra do quadro",
+        "body": "🔇 ativa o áudio deste vídeo e silencia os outros.\nO botão dourado amplia (o mesmo botão, ou Esc, reduz de novo).\n✎ troca o link, ✕ remove (dá pra desfazer).\nArraste a barra sobre outro quadro para trocá-los de lugar."
+      },
+      "manage": {
+        "title": "Seleção e loop",
+        "body": "Selecionar: remova vários vídeos de uma vez.\nLoop: os vídeos do YouTube recomeçam sozinhos ao terminar; desative aqui."
+      },
+      "share": {
+        "title": "Compartilhe o painel",
+        "body": "Copie um link com todos esses vídeos dentro: quem abrir vê exatamente o mesmo painel."
+      },
+      "home": {
+        "title": "Voltar ao início",
+        "body": "Aperte o logo para voltar à sua lista de links. Os vídeos continuam rodando: quando você voltar, vai encontrá-los do jeito que deixou."
+      },
+      "keys": {
+        "title": "Atalhos de teclado",
+        "body": "Passe o mouse sobre um vídeo e use:\nk play/pausa · j / l volta/avança 10 s\nm áudio · , / . passos curtos"
+      },
+      "replay": {
+        "title": "Ver o tour de novo",
+        "body": "Sempre que quiser relembrar, o tour está aqui. Bom proveito!"
+      }
+    }
   }
 }

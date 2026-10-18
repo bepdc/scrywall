@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Compartir",
     "loopOn": "🔁 Bucle activado",
-    "loopOff": "🔁 Bucle desactivado"
+    "loopOff": "🔁 Bucle desactivado",
+    "home": "Volver al inicio"
   },
   "tile": {
     "loading": "Cargando…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Idioma"
+  },
+  "footer": {
+    "rights": "Proyecto independiente, no afiliado ni respaldado por YouTube, Google o Twitch. Los vídeos siguen siendo de sus respectivos propietarios."
+  },
+  "tour": {
+    "next": "Siguiente",
+    "back": "Atrás",
+    "skip": "Saltar el tour",
+    "done": "Listo",
+    "progress": "{current} de {total}",
+    "replay": "Ver el tour de nuevo",
+    "setup": {
+      "welcome": {
+        "title": "Te doy la bienvenida a Scrywall 👁️",
+        "body": "Muchos vídeos y directos, todos en una sola pantalla. Te enseño cómo funciona en pocos pasos: puedes saltarlo cuando quieras."
+      },
+      "links": {
+        "title": "Pega tus enlaces",
+        "body": "Un enlace de YouTube o Twitch por línea. La línea vacía de abajo siempre está lista para el siguiente, y puedes pegar muchos a la vez."
+      },
+      "start": {
+        "title": "Enciende el muro",
+        "body": "Pulsa aquí y los vídeos empiezan todos juntos, sin sonido. El audio lo activas tú, uno a la vez."
+      },
+      "language": {
+        "title": "Tu idioma",
+        "body": "Scrywall habla 6 idiomas: cámbialo desde aquí cuando quieras."
+      },
+      "donate": {
+        "title": "¿Un café o una cerveza?",
+        "body": "El sitio es gratis. Si te resulta útil, desde aquí puedes invitarme a algo."
+      },
+      "replay": {
+        "title": "Ver el tour de nuevo",
+        "body": "Si olvidas algo, el tour siempre está aquí."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Este es tu muro",
+        "body": "Todos los vídeos empezaron en silencio. Veamos rápido qué puedes hacer desde aquí."
+      },
+      "add": {
+        "title": "Añade sin empezar de cero",
+        "body": "Pega un enlace aquí para añadir un vídeo: los que ya se están reproduciendo no se detienen."
+      },
+      "tile": {
+        "title": "Cada recuadro es un vídeo",
+        "body": "Reproducir, pausar y avanzar son los controles originales de YouTube y Twitch: úsalos directamente sobre el vídeo."
+      },
+      "head": {
+        "title": "La barra del recuadro",
+        "body": "🔇 activa el audio de este vídeo y silencia los demás.\nEl botón dorado lo amplía (el mismo botón, o Esc, lo reduce).\n✎ cambia el enlace, ✕ lo quita (puedes deshacerlo).\nArrastra la barra sobre otro recuadro para intercambiarlos."
+      },
+      "manage": {
+        "title": "Selección y bucle",
+        "body": "Seleccionar: quita varios vídeos de una vez.\nBucle: los vídeos de YouTube vuelven a empezar solos al terminar; desactívalo aquí."
+      },
+      "share": {
+        "title": "Comparte el muro",
+        "body": "Copia un enlace con todos estos vídeos dentro: quien lo abra verá exactamente el mismo muro."
+      },
+      "home": {
+        "title": "Volver al inicio",
+        "body": "Pulsa el logo para volver a tu lista de enlaces. Los vídeos siguen en marcha: al volver los encontrarás tal como los dejaste."
+      },
+      "keys": {
+        "title": "Atajos de teclado",
+        "body": "Pasa el ratón sobre un vídeo y usa:\nk reproducir/pausa · j / l atrás/adelante 10 s\nm audio · , / . pasos pequeños"
+      },
+      "replay": {
+        "title": "Ver el tour de nuevo",
+        "body": "Cuando quieras repasar, el tour siempre está aquí. ¡Que lo disfrutes!"
+      }
+    }
   }
 }

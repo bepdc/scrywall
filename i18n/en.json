@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Share",
     "loopOn": "🔁 Loop on",
-    "loopOff": "🔁 Loop off"
+    "loopOff": "🔁 Loop off",
+    "home": "Back to home"
   },
   "tile": {
     "loading": "Loading…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Language"
+  },
+  "footer": {
+    "rights": "Independent project, not affiliated with or endorsed by YouTube, Google or Twitch. Videos remain the property of their respective owners."
+  },
+  "tour": {
+    "next": "Next",
+    "back": "Back",
+    "skip": "Skip tour",
+    "done": "Done",
+    "progress": "{current} of {total}",
+    "replay": "Replay the tour",
+    "setup": {
+      "welcome": {
+        "title": "Welcome to Scrywall 👁️",
+        "body": "Lots of videos and streams, all on one screen. Here's how it works in a few steps — you can skip anytime."
+      },
+      "links": {
+        "title": "Paste your links",
+        "body": "One YouTube or Twitch link per line. The empty line at the bottom is always ready for the next one, and you can paste many at once."
+      },
+      "start": {
+        "title": "Light up the wall",
+        "body": "Press here and the videos all start together, without sound. You turn the audio on yourself, one at a time."
+      },
+      "language": {
+        "title": "Your language",
+        "body": "Scrywall speaks 6 languages: switch here whenever you like."
+      },
+      "donate": {
+        "title": "A coffee or a beer?",
+        "body": "The site is free. If you find it useful, you can buy me something from here."
+      },
+      "replay": {
+        "title": "Replay the tour",
+        "body": "If you forget something, the tour is always right here."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Here's your wall",
+        "body": "Every video started muted. Let's take a quick look at what you can do from here."
+      },
+      "add": {
+        "title": "Add without starting over",
+        "body": "Paste a link here to add a video: the ones already playing won't stop."
+      },
+      "tile": {
+        "title": "Every tile is a video",
+        "body": "Play, pause and seeking are YouTube's and Twitch's own controls: use them right on the video."
+      },
+      "head": {
+        "title": "The tile bar",
+        "body": "🔇 turns on this video's audio and mutes the others.\nThe gold button enlarges it (the same button, or Esc, shrinks it back).\n✎ changes the link, ✕ removes it (you can undo).\nDrag the bar onto another tile to swap them."
+      },
+      "manage": {
+        "title": "Select and loop",
+        "body": "Select: remove several videos in one go.\nLoop: YouTube videos restart on their own when they end — turn it off here."
+      },
+      "share": {
+        "title": "Share the wall",
+        "body": "Copy a link with all these videos inside: whoever opens it sees exactly the same wall."
+      },
+      "home": {
+        "title": "Back to home",
+        "body": "Press the logo to go back to your list of links. The videos keep running: when you come back, you'll find them just as you left them."
+      },
+      "keys": {
+        "title": "Keyboard shortcuts",
+        "body": "Hover over a video and use:\nk play/pause · j / l back/forward 10 s\nm audio · , / . small steps"
+      },
+      "replay": {
+        "title": "Replay the tour",
+        "body": "Whenever you want a refresher, the tour is always here. Enjoy!"
+      }
+    }
   }
 }

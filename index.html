@@ -17,10 +17,10 @@
 <body>
 
   <header id="topbar" class="topbar hidden">
-    <div class="brand">
+    <button id="brand-home" type="button" class="brand brand-home" data-i18n-attr="title:toolbar.home,aria-label:toolbar.home" title="Torna alla home" aria-label="Torna alla home">
       <span class="orb" aria-hidden="true"></span>
       <span class="brand-name">Scrywall</span>
-    </div>
+    </button>
     <div class="actions">
       <button id="btn-select" type="button" data-i18n="manage.selectMode">☑ Seleziona</button>
       <button id="btn-remove-selected" type="button" class="hidden danger"></button>
@@ -29,6 +29,7 @@
       <button id="donate-top" type="button" class="donate">
         <span aria-hidden="true">☕🍺</span><span class="donate-text" data-i18n="donate.cta"> Buy me a coffee or a beer</span>
       </button>
+      <button id="tour-btn-wall" type="button" class="tour-btn" data-i18n-attr="title:tour.replay,aria-label:tour.replay" title="Rivedi il tour" aria-label="Rivedi il tour">?</button>
       <div id="lang-switch-topbar" class="lang-switch"></div>
     </div>
   </header>
@@ -41,6 +42,7 @@
 
   <section id="setup" class="setup">
     <div class="setup-card">
+      <button id="tour-btn-setup" type="button" class="tour-btn tour-btn-corner" data-i18n-attr="title:tour.replay,aria-label:tour.replay" title="Rivedi il tour" aria-label="Rivedi il tour">?</button>
       <div id="lang-switch-setup" class="lang-switch lang-switch-corner"></div>
       <div class="brand brand-big">
         <span class="orb orb-big" aria-hidden="true"></span>
@@ -71,6 +73,12 @@
 
   <main id="wall" class="wall hidden"></main>
 
+  <footer id="site-footer" class="site-footer">
+    <span class="footer-copy">© 2026 Scrywall</span>
+    <span class="footer-sep" aria-hidden="true">·</span>
+    <span data-i18n="footer.rights">Progetto indipendente, non affiliato né approvato da YouTube, Google o Twitch. I video restano dei rispettivi proprietari.</span>
+  </footer>
+
   <dialog id="donate-dialog" class="dialog">
     <div class="dialog-body">
       <button id="donate-close" type="button" class="dialog-x" data-i18n-attr="aria-label:donate.close" aria-label="Chiudi">✕</button>
@@ -92,6 +100,20 @@
       </div>
 
       <p class="dialog-note" data-i18n="donate.note">Si apre PayPal in una nuova scheda: il pagamento avviene lì.</p>
+    </div>
+  </dialog>
+
+  <dialog id="tour" class="tour" aria-labelledby="tour-title" aria-describedby="tour-body">
+    <div class="tour-spot" aria-hidden="true"></div>
+    <div class="tour-pop">
+      <p id="tour-progress" class="tour-progress"></p>
+      <h2 id="tour-title" class="tour-title"></h2>
+      <p id="tour-body" class="tour-body"></p>
+      <div class="tour-actions">
+        <button id="tour-skip" type="button" class="tour-skip" data-i18n="tour.skip">Salta il tour</button>
+        <button id="tour-back" type="button" data-i18n="tour.back">Indietro</button>
+        <button id="tour-next" type="button" class="primary-sm">Avanti</button>
+      </div>
     </div>
   </dialog>
 

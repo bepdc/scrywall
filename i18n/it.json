@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Condividi",
     "loopOn": "🔁 Loop attivo",
-    "loopOff": "🔁 Loop disattivato"
+    "loopOff": "🔁 Loop disattivato",
+    "home": "Torna alla home"
   },
   "tile": {
     "loading": "Caricamento…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Lingua"
+  },
+  "footer": {
+    "rights": "Progetto indipendente, non affiliato né approvato da YouTube, Google o Twitch. I video restano dei rispettivi proprietari."
+  },
+  "tour": {
+    "next": "Avanti",
+    "back": "Indietro",
+    "skip": "Salta il tour",
+    "done": "Fine",
+    "progress": "{current} di {total}",
+    "replay": "Rivedi il tour",
+    "setup": {
+      "welcome": {
+        "title": "Ti do il benvenuto su Scrywall 👁️",
+        "body": "Tanti video e dirette, tutti su un solo schermo. Ti mostro come funziona in pochi passi: puoi saltare quando vuoi."
+      },
+      "links": {
+        "title": "Incolla i tuoi link",
+        "body": "Un link YouTube o Twitch per riga. La riga vuota in fondo è sempre pronta per il prossimo, e puoi incollarne tanti insieme."
+      },
+      "start": {
+        "title": "Accendi il muro",
+        "body": "Premi qui e i video partono tutti insieme, senza audio. Il suono lo accendi tu, uno alla volta."
+      },
+      "language": {
+        "title": "La tua lingua",
+        "body": "Scrywall parla 6 lingue: cambiala da qui quando vuoi."
+      },
+      "donate": {
+        "title": "Un caffè o una birra?",
+        "body": "Il sito è gratis. Se ti è utile, da qui puoi offrirmi qualcosa."
+      },
+      "replay": {
+        "title": "Rivedi il tour",
+        "body": "Se ti scordi qualcosa, il tour lo ritrovi sempre qui."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Ecco il tuo muro",
+        "body": "Tutti i video sono partiti in muto. Vediamo in un attimo cosa puoi fare da qui."
+      },
+      "add": {
+        "title": "Aggiungi senza ricominciare",
+        "body": "Incolla un link qui per aggiungere un video: quelli già in riproduzione non si fermano."
+      },
+      "tile": {
+        "title": "Ogni riquadro è un video",
+        "body": "Play, pausa e avanzamento sono i controlli originali di YouTube e Twitch: usali direttamente sul video."
+      },
+      "head": {
+        "title": "La barra del riquadro",
+        "body": "🔇 accende l'audio di questo video e zittisce gli altri.\nIl pulsante dorato lo ingrandisce (lo stesso pulsante, o Esc, lo riduce).\n✎ cambia il link, ✕ lo rimuove (puoi annullare).\nTrascina la barra su un altro riquadro per scambiarli di posto."
+      },
+      "manage": {
+        "title": "Selezione e loop",
+        "body": "Seleziona: togli più video in un colpo solo.\nLoop: i video YouTube ripartono da soli quando finiscono; qui lo spegni."
+      },
+      "share": {
+        "title": "Condividi il muro",
+        "body": "Copia un link con tutti questi video dentro: chi lo apre vede esattamente lo stesso muro."
+      },
+      "home": {
+        "title": "Torna alla home",
+        "body": "Premi il logo per tornare all'elenco dei link. I video restano accesi: al ritorno li ritrovi come li avevi lasciati."
+      },
+      "keys": {
+        "title": "Scorciatoie da tastiera",
+        "body": "Passa col mouse su un video e usa:\nk play/pausa · j / l indietro/avanti di 10 s\nm audio · , / . piccoli passi"
+      },
+      "replay": {
+        "title": "Rivedi il tour",
+        "body": "Quando vuoi ripassare, il tour è sempre qui. Buona visione!"
+      }
+    }
   }
 }

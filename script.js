@@ -63,6 +63,19 @@ const els = {
   donateCurrency: document.getElementById("donate-currency"),
   langSwitchTopbar: document.getElementById("lang-switch-topbar"),
   langSwitchSetup: document.getElementById("lang-switch-setup"),
+  brandHome: document.getElementById("brand-home"),
+  footer: document.getElementById("site-footer"),
+  tourBtnSetup: document.getElementById("tour-btn-setup"),
+  tourBtnWall: document.getElementById("tour-btn-wall"),
+  tour: document.getElementById("tour"),
+  tourSpot: document.querySelector("#tour .tour-spot"),
+  tourPop: document.querySelector("#tour .tour-pop"),
+  tourProgress: document.getElementById("tour-progress"),
+  tourTitle: document.getElementById("tour-title"),
+  tourBody: document.getElementById("tour-body"),
+  tourSkip: document.getElementById("tour-skip"),
+  tourBack: document.getElementById("tour-back"),
+  tourNext: document.getElementById("tour-next"),
 };
 
 const state = {
@@ -1030,13 +1043,7 @@ async function restoreTileAt(index, src) {
   history.replaceState(null, "", hashFor(state.sources));
   saveCurrentLinks();
 
-  if (els.wall.classList.contains("hidden")) {
-    els.setup.classList.add("hidden");
-    els.topbar.classList.remove("hidden");
-    els.wall.classList.remove("hidden");
-    showAddBar();
-    els.wall.style.setProperty("--head-h", HEAD_H + "px");
-  }
+  if (els.wall.classList.contains("hidden")) showWallScreen();
 
   if (state.focusedIndex !== null) applyFocusLayout();
   else layoutGrid();
@@ -1082,11 +1089,8 @@ function removeTiles(indexes) {
   if (!state.tiles.length) {
     // Nessun video rimasto: si torna alla schermata iniziale.
     destroyWall();
-    els.topbar.classList.add("hidden");
-    els.wall.classList.add("hidden");
-    hideAddBar();
-    els.setup.classList.remove("hidden");
     populateRows([]);
+    showSetupScreen();
     return;
   }
 
@@ -1094,6 +1098,40 @@ function removeTiles(indexes) {
   if (removedFocused) showGrid();
   else if (state.focusedIndex !== null) applyFocusLayout();
   else layoutGrid();
+}
+
+/* ---------- Le due "pagine": home (elenco dei link) e muro ---------- */
+
+function showSetupScreen() {
+  if (tour && tour.name !== "setup") endTour(false);
+  els.topbar.classList.add("hidden");
+  els.wall.classList.add("hidden");
+  hideAddBar();
+  els.setup.classList.remove("hidden");
+  maybeStartTour("setup");
+}
+
+function showWallScreen() {
+  if (tour && tour.name !== "wall") endTour(false);
+  els.setup.classList.add("hidden");
+  els.topbar.classList.remove("hidden");
+  els.wall.classList.remove("hidden");
+  showAddBar();
+  els.wall.style.setProperty("--head-h", HEAD_H + "px");
+  maybeStartTour("wall");
+}
+
+// Logo in topbar → home, con i link attuali già nelle righe. Il muro NON si
+// distrugge: resta vivo (nascosto), così premendo di nuovo "Mostra tutti i
+// video" applyWall() riusa i riquadri invariati invece di ricaricarli, e chi
+// stava ascoltando qualcosa non lo perde mentre ritocca l'elenco.
+function goHome() {
+  if (state.sources.length) populateRows(state.sources.map(sourceUrl));
+  state.tiles.forEach((tl) => cancelEditTile(tl));
+  setSelecting(false);
+  els.msg.textContent = "";
+  showSetupScreen();
+  window.scrollTo({ top: 0 });
 }
 
 /* ---------- Costruzione / aggiornamento del muro (sempre per diff) ---------- */
@@ -1160,20 +1198,13 @@ async function applyWall(sources) {
   saveCurrentLinks();
 
   if (!state.tiles.length) {
-    els.topbar.classList.add("hidden");
-    els.wall.classList.add("hidden");
-    hideAddBar();
-    els.setup.classList.remove("hidden");
     populateRows([]);
+    showSetupScreen();
     return;
   }
 
   // Prima si mostra il muro, così le misure per il layout sono reali
-  els.setup.classList.add("hidden");
-  els.topbar.classList.remove("hidden");
-  els.wall.classList.remove("hidden");
-  showAddBar();
-  els.wall.style.setProperty("--head-h", HEAD_H + "px");
+  showWallScreen();
 
   if (state.focusedIndex !== null) applyFocusLayout();
   else showGrid();
@@ -1257,7 +1288,11 @@ function layoutGrid() {
   // disponibile (es. dopo un resize). Si misura la larghezza del viewport.
   const W = document.documentElement.clientWidth - PAD * 2;
   const top = els.wall.offsetTop;
-  const H = window.innerHeight - top - PAD * 2;
+  // Il footer resta visibile sotto al muro: se ne toglie l'altezza, altrimenti
+  // la pagina scorrerebbe di quel poco e la barra di scorrimento comparsa
+  // ruberebbe larghezza ai riquadri appena calcolati.
+  const footerH = els.footer.offsetHeight;
+  const H = window.innerHeight - top - footerH - PAD * 2;
   if (W <= 0 || H <= 0) return;
 
   let bestCols = 1;
@@ -1284,11 +1319,11 @@ function layoutGrid() {
 
   els.wall.style.setProperty("--cols", bestCols);
   els.wall.style.setProperty("--tile-w", Math.floor(bestW) + "px");
-  els.wall.style.minHeight = fits ? (window.innerHeight - top) + "px" : "";
+  els.wall.style.minHeight = fits ? (window.innerHeight - top - footerH) + "px" : "";
 }
 
 function updateMainHeight() {
-  const h = window.innerHeight - els.wall.offsetTop - PAD * 2;
+  const h = window.innerHeight - els.wall.offsetTop - els.footer.offsetHeight - PAD * 2;
   const mainH = Math.max(h, 240);
   els.wall.style.setProperty("--main-h", mainH + "px");
 
@@ -1504,7 +1539,7 @@ els.donateDialog.addEventListener("click", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape" || els.donateDialog.open) return;
+  if (e.key !== "Escape" || els.donateDialog.open || els.tour.open) return;
   const editingTile = state.tiles.find((tl) => tl.el.classList.contains("editing"));
   if (editingTile) { cancelEditTile(editingTile); return; }
   if (state.selecting) { setSelecting(false); return; }
@@ -1535,7 +1570,7 @@ function nudgeTime(tile, deltaSeconds) {
 }
 
 document.addEventListener("keydown", (e) => {
-  if (isTypingTarget(document.activeElement) || els.donateDialog.open) return;
+  if (isTypingTarget(document.activeElement) || els.donateDialog.open || els.tour.open) return;
   if (!activeTile || activeTile.dead) return;
 
   switch (e.key) {
@@ -1583,6 +1618,201 @@ window.addEventListener("hashchange", () => {
 // delle donazioni (formattati col locale) vanno rigenerati.
 document.addEventListener("scrywall:langchange", buildDonateDialog);
 
+els.brandHome.addEventListener("click", goHome);
+
+/* ---------- Tour guidato ---------- */
+
+// Un tour per "pagina": parte da solo la prima volta che la si vede, e il
+// pulsantino "?" lo fa ripartire quando si vuole. Ogni passo evidenzia uno o
+// più elementi (target) oppure nessuno (passo centrato, es. il benvenuto).
+// I testi stanno in i18n sotto tour.<pagina>.<chiave>.title/body.
+const TOURS = {
+  setup: [
+    { key: "welcome" },
+    { key: "links", target: () => els.rows },
+    { key: "start", target: () => els.btnStart },
+    { key: "language", target: () => els.langSwitchSetup },
+    { key: "donate", target: () => els.donateSetup },
+    { key: "replay", target: () => els.tourBtnSetup },
+  ],
+  wall: [
+    { key: "welcome" },
+    { key: "add", target: () => els.addPanel },
+    { key: "tile", target: () => state.tiles[0] && state.tiles[0].el },
+    { key: "head", target: () => state.tiles[0] && state.tiles[0].el.querySelector(".tile-head") },
+    { key: "manage", target: () => [els.btnSelect, els.btnLoop] },
+    { key: "share", target: () => els.btnShare },
+    { key: "home", target: () => els.brandHome },
+    { key: "keys" },
+    { key: "replay", target: () => els.tourBtnWall },
+  ],
+};
+
+const TOUR_SEEN_KEY = { setup: "scrywall.tour.setup", wall: "scrywall.tour.wall" };
+const TOUR_AUTOSTART_DELAY = 600; // ms: lascia assestare la pagina prima di partire
+const TOUR_PAD = 6;    // aria attorno all'elemento evidenziato
+const TOUR_GAP = 12;   // distanza tra evidenziazione e fumetto
+const TOUR_EDGE = 12;  // distanza minima del fumetto dai bordi dello schermo
+
+let tour = null; // { name, steps, index, targets, moveTimer }
+
+function tourSeen(name) {
+  // Se lo storage non è disponibile meglio non riproporlo a ogni visita:
+  // resta comunque il pulsante "?" per farlo partire a mano.
+  try { return localStorage.getItem(TOUR_SEEN_KEY[name]) === "1"; } catch (_) { return true; }
+}
+
+function markTourSeen(name) {
+  try { localStorage.setItem(TOUR_SEEN_KEY[name], "1"); } catch (_) {}
+}
+
+// Elementi del passo effettivamente visibili: un pulsante nascosto, o un
+// riquadro che non c'è, non si può evidenziare (e il passo si salta).
+function tourTargets(step) {
+  const raw = step.target ? step.target() : null;
+  return (Array.isArray(raw) ? raw : [raw]).filter((el) => el && el.getClientRects().length > 0);
+}
+
+function maybeStartTour(name) {
+  if (tourSeen(name)) return;
+  setTimeout(() => {
+    const visible = name === "wall"
+      ? !els.wall.classList.contains("hidden")
+      : !els.setup.classList.contains("hidden");
+    if (!tour && visible && !els.donateDialog.open && !tourSeen(name)) startTour(name);
+  }, TOUR_AUTOSTART_DELAY);
+}
+
+function startTour(name) {
+  if (tour) endTour(false);
+  if (name === "wall") {
+    // Il tour descrive la barra dei riquadri come si vede di solito: niente
+    // selezione multipla o modifica di un link lasciate a metà.
+    state.tiles.forEach((tl) => cancelEditTile(tl));
+    setSelecting(false);
+  }
+  const steps = TOURS[name].filter((step) => !step.target || tourTargets(step).length);
+  if (!steps.length) return;
+  tour = { name, steps, index: 0, targets: null, moveTimer: null };
+  els.tour.showModal();
+  renderTourStep(false);
+}
+
+// completed = finito o saltato dall'utente: non riparte più da solo.
+// Un tour interrotto perché si è cambiata pagina, invece, si riproporrà.
+function endTour(completed) {
+  if (!tour) return;
+  if (completed) markTourSeen(tour.name);
+  clearTimeout(tour.moveTimer);
+  tour = null;
+  if (els.tour.open) els.tour.close();
+}
+
+function renderTourStep(animate = true) {
+  const { name, steps, index } = tour;
+  const step = steps[index];
+  const last = index === steps.length - 1;
+
+  els.tourProgress.textContent = t("tour.progress", { current: index + 1, total: steps.length });
+  els.tourTitle.textContent = t(`tour.${name}.${step.key}.title`);
+  els.tourBody.textContent = t(`tour.${name}.${step.key}.body`);
+  els.tourBack.classList.toggle("hidden", index === 0);
+  els.tourSkip.classList.toggle("hidden", last);
+  els.tourNext.textContent = t(last ? "tour.done" : "tour.next");
+
+  const targets = step.target ? tourTargets(step) : [];
+  tour.targets = targets.length ? targets : null; // sparito nel frattempo: passo centrato
+  if (tour.targets) tour.targets[0].scrollIntoView({ block: "nearest", inline: "nearest" });
+
+  // Spot e fumetto scivolano al nuovo posto solo durante il cambio di passo.
+  els.tour.classList.toggle("is-moving", animate);
+  clearTimeout(tour.moveTimer);
+  if (animate) tour.moveTimer = setTimeout(() => els.tour.classList.remove("is-moving"), 300);
+
+  els.tourPop.classList.remove("enter");
+  void els.tourPop.offsetWidth; // riavvia l'animazione d'entrata del fumetto
+  els.tourPop.classList.add("enter");
+
+  positionTour();
+  els.tourNext.focus();
+}
+
+function positionTour() {
+  if (!tour) return;
+  const vw = document.documentElement.clientWidth;
+  const vh = window.innerHeight;
+  const pop = els.tourPop;
+  const spot = els.tourSpot;
+  const pw = pop.offsetWidth;
+  const ph = pop.offsetHeight;
+
+  if (!tour.targets) {
+    // Nessun elemento: lo spot si chiude in un punto al centro (resta solo
+    // l'oscuramento) e il fumetto sta in mezzo allo schermo.
+    spot.classList.add("is-empty");
+    Object.assign(spot.style, { left: vw / 2 + "px", top: vh / 2 + "px", width: "0px", height: "0px" });
+    pop.style.left = Math.max(TOUR_EDGE, (vw - pw) / 2) + "px";
+    pop.style.top = Math.max(TOUR_EDGE, (vh - ph) / 2) + "px";
+    return;
+  }
+
+  // Più elementi nello stesso passo (es. Seleziona + Loop): un unico riquadro
+  // che li contiene tutti.
+  const rects = tour.targets.map((el) => el.getBoundingClientRect());
+  const r = {
+    left: Math.min(...rects.map((x) => x.left)) - TOUR_PAD,
+    top: Math.min(...rects.map((x) => x.top)) - TOUR_PAD,
+    right: Math.max(...rects.map((x) => x.right)) + TOUR_PAD,
+    bottom: Math.max(...rects.map((x) => x.bottom)) + TOUR_PAD,
+  };
+  spot.classList.remove("is-empty");
+  Object.assign(spot.style, {
+    left: r.left + "px",
+    top: r.top + "px",
+    width: r.right - r.left + "px",
+    height: r.bottom - r.top + "px",
+  });
+
+  // Il fumetto va sotto l'elemento se ci sta, sennò sopra; se l'elemento è
+  // così grande da non lasciare spazio né sopra né sotto (es. un riquadro
+  // enorme), si appoggia in fondo allo schermo, sopra l'evidenziazione.
+  let top;
+  if (r.bottom + TOUR_GAP + ph <= vh - TOUR_EDGE) top = r.bottom + TOUR_GAP;
+  else if (r.top - TOUR_GAP - ph >= TOUR_EDGE) top = r.top - TOUR_GAP - ph;
+  else top = vh - ph - TOUR_EDGE;
+  const left = (r.left + r.right) / 2 - pw / 2;
+  pop.style.left = Math.min(Math.max(TOUR_EDGE, left), vw - pw - TOUR_EDGE) + "px";
+  pop.style.top = Math.max(TOUR_EDGE, top) + "px";
+}
+
+els.tourNext.addEventListener("click", () => {
+  if (!tour) return;
+  if (tour.index >= tour.steps.length - 1) endTour(true);
+  else { tour.index++; renderTourStep(); }
+});
+els.tourBack.addEventListener("click", () => {
+  if (!tour || tour.index === 0) return;
+  tour.index--;
+  renderTourStep();
+});
+els.tourSkip.addEventListener("click", () => endTour(true));
+// Esc (o il "indietro" di sistema) sul dialog modale = salta il tour.
+els.tour.addEventListener("cancel", (e) => {
+  e.preventDefault();
+  endTour(true);
+});
+els.tour.addEventListener("keydown", (e) => {
+  if (!tour) return;
+  e.stopPropagation(); // le scorciatoie del muro (k, m, Esc...) non devono scattare sotto il tour
+  if (e.key === "ArrowRight") { e.preventDefault(); els.tourNext.click(); }
+  else if (e.key === "ArrowLeft") { e.preventDefault(); els.tourBack.click(); }
+});
+window.addEventListener("resize", positionTour);
+window.addEventListener("scroll", positionTour, { passive: true });
+
+els.tourBtnSetup.addEventListener("click", () => startTour("setup"));
+els.tourBtnWall.addEventListener("click", () => startTour("wall"));
+
 /* ---------- Avvio ---------- */
 
 await initI18n();
@@ -1595,5 +1825,7 @@ buildDonateDialog();
 populateRows(loadSavedLinks());
 
 // Se l'URL contiene dei video (link condiviso), parte direttamente il muro
+// (e il suo tour, se è la prima volta); altrimenti si resta sulla home.
 const sources = getSourcesFromHash();
 if (sources.length) applyWall(sources);
+else maybeStartTour("setup");

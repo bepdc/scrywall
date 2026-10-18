@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Partager",
     "loopOn": "🔁 Boucle activée",
-    "loopOff": "🔁 Boucle désactivée"
+    "loopOff": "🔁 Boucle désactivée",
+    "home": "Retour à l'accueil"
   },
   "tile": {
     "loading": "Chargement…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Langue"
+  },
+  "footer": {
+    "rights": "Projet indépendant, ni affilié ni approuvé par YouTube, Google ou Twitch. Les vidéos restent la propriété de leurs titulaires respectifs."
+  },
+  "tour": {
+    "next": "Suivant",
+    "back": "Retour",
+    "skip": "Passer la visite",
+    "done": "Terminé",
+    "progress": "{current} sur {total}",
+    "replay": "Revoir la visite",
+    "setup": {
+      "welcome": {
+        "title": "Bienvenue sur Scrywall 👁️",
+        "body": "Plein de vidéos et de directs, tous sur un seul écran. Je te montre comment ça marche en quelques étapes : tu peux passer quand tu veux."
+      },
+      "links": {
+        "title": "Colle tes liens",
+        "body": "Un lien YouTube ou Twitch par ligne. La ligne vide en bas est toujours prête pour le suivant, et tu peux en coller plusieurs d'un coup."
+      },
+      "start": {
+        "title": "Allume le mur",
+        "body": "Appuie ici et les vidéos démarrent toutes ensemble, sans son. C'est toi qui actives le son, une à la fois."
+      },
+      "language": {
+        "title": "Ta langue",
+        "body": "Scrywall parle 6 langues : change-la ici quand tu veux."
+      },
+      "donate": {
+        "title": "Un café ou une bière ?",
+        "body": "Le site est gratuit. S'il t'est utile, tu peux m'offrir quelque chose d'ici."
+      },
+      "replay": {
+        "title": "Revoir la visite",
+        "body": "Si tu oublies quelque chose, la visite est toujours ici."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Voici ton mur",
+        "body": "Toutes les vidéos ont démarré en muet. Voyons rapidement ce que tu peux faire d'ici."
+      },
+      "add": {
+        "title": "Ajoute sans tout recommencer",
+        "body": "Colle un lien ici pour ajouter une vidéo : celles déjà en lecture ne s'arrêtent pas."
+      },
+      "tile": {
+        "title": "Chaque case est une vidéo",
+        "body": "Lecture, pause et avance sont les contrôles d'origine de YouTube et Twitch : utilise-les directement sur la vidéo."
+      },
+      "head": {
+        "title": "La barre de la case",
+        "body": "🔇 active le son de cette vidéo et coupe les autres.\nLe bouton doré l'agrandit (le même bouton, ou Échap, la réduit).\n✎ change le lien, ✕ la supprime (tu peux annuler).\nFais glisser la barre sur une autre case pour les échanger."
+      },
+      "manage": {
+        "title": "Sélection et boucle",
+        "body": "Sélectionner : supprime plusieurs vidéos d'un coup.\nBoucle : les vidéos YouTube redémarrent toutes seules à la fin ; désactive-la ici."
+      },
+      "share": {
+        "title": "Partage le mur",
+        "body": "Copie un lien avec toutes ces vidéos dedans : qui l'ouvre voit exactement le même mur."
+      },
+      "home": {
+        "title": "Retour à l'accueil",
+        "body": "Appuie sur le logo pour revenir à ta liste de liens. Les vidéos continuent de tourner : au retour, tu les retrouves comme tu les as laissées."
+      },
+      "keys": {
+        "title": "Raccourcis clavier",
+        "body": "Survole une vidéo et utilise :\nk lecture/pause · j / l recul/avance de 10 s\nm son · , / . petits pas"
+      },
+      "replay": {
+        "title": "Revoir la visite",
+        "body": "Pour une piqûre de rappel, la visite est toujours ici. Bon visionnage !"
+      }
+    }
   }
 }

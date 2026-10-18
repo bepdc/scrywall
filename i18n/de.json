@@ -17,7 +17,8 @@
   "toolbar": {
     "share": "🔗 Teilen",
     "loopOn": "🔁 Schleife an",
-    "loopOff": "🔁 Schleife aus"
+    "loopOff": "🔁 Schleife aus",
+    "home": "Zur Startseite"
   },
   "tile": {
     "loading": "Wird geladen…",
@@ -81,5 +82,80 @@
   },
   "common": {
     "languageLabel": "Sprache"
+  },
+  "footer": {
+    "rights": "Unabhängiges Projekt, weder mit YouTube, Google noch Twitch verbunden oder von ihnen anerkannt. Die Videos bleiben Eigentum ihrer jeweiligen Inhaber."
+  },
+  "tour": {
+    "next": "Weiter",
+    "back": "Zurück",
+    "skip": "Tour überspringen",
+    "done": "Fertig",
+    "progress": "{current} von {total}",
+    "replay": "Tour erneut ansehen",
+    "setup": {
+      "welcome": {
+        "title": "Willkommen bei Scrywall 👁️",
+        "body": "Viele Videos und Streams, alle auf einem Bildschirm. Ich zeige dir in ein paar Schritten, wie es funktioniert – du kannst jederzeit überspringen."
+      },
+      "links": {
+        "title": "Füge deine Links ein",
+        "body": "Ein YouTube- oder Twitch-Link pro Zeile. Die leere Zeile unten ist immer für den nächsten bereit, und du kannst viele auf einmal einfügen."
+      },
+      "start": {
+        "title": "Schalte die Wand ein",
+        "body": "Drück hier und alle Videos starten gleichzeitig, ohne Ton. Den Ton schaltest du selbst ein, einen nach dem anderen."
+      },
+      "language": {
+        "title": "Deine Sprache",
+        "body": "Scrywall spricht 6 Sprachen: Wechsle sie hier, wann immer du willst."
+      },
+      "donate": {
+        "title": "Ein Kaffee oder ein Bier?",
+        "body": "Die Seite ist kostenlos. Wenn sie dir nützt, kannst du mir hier etwas spendieren."
+      },
+      "replay": {
+        "title": "Tour erneut ansehen",
+        "body": "Falls du etwas vergisst: Die Tour findest du immer hier."
+      }
+    },
+    "wall": {
+      "welcome": {
+        "title": "Das ist deine Wand",
+        "body": "Alle Videos sind stumm gestartet. Schauen wir kurz, was du von hier aus tun kannst."
+      },
+      "add": {
+        "title": "Hinzufügen, ohne neu anzufangen",
+        "body": "Füge hier einen Link ein, um ein Video hinzuzufügen: Die bereits laufenden halten nicht an."
+      },
+      "tile": {
+        "title": "Jede Kachel ist ein Video",
+        "body": "Play, Pause und Spulen sind die originalen Steuerelemente von YouTube und Twitch: Nutze sie direkt im Video."
+      },
+      "head": {
+        "title": "Die Leiste der Kachel",
+        "body": "🔇 schaltet den Ton dieses Videos ein und die anderen stumm.\nDer goldene Button vergrößert es (derselbe Button oder Esc verkleinert es wieder).\n✎ ändert den Link, ✕ entfernt es (rückgängig machbar).\nZieh die Leiste auf eine andere Kachel, um sie zu tauschen."
+      },
+      "manage": {
+        "title": "Auswahl und Schleife",
+        "body": "Auswählen: mehrere Videos auf einmal entfernen.\nSchleife: YouTube-Videos starten am Ende von selbst neu – hier schaltest du das ab."
+      },
+      "share": {
+        "title": "Teile die Wand",
+        "body": "Kopiere einen Link mit all diesen Videos: Wer ihn öffnet, sieht genau dieselbe Wand."
+      },
+      "home": {
+        "title": "Zur Startseite",
+        "body": "Drück auf das Logo, um zu deiner Linkliste zurückzukehren. Die Videos laufen weiter: Wenn du zurückkommst, findest du sie so, wie du sie verlassen hast."
+      },
+      "keys": {
+        "title": "Tastenkürzel",
+        "body": "Fahr mit der Maus über ein Video und nutze:\nk Play/Pause · j / l 10 s zurück/vor\nm Ton · , / . kleine Schritte"
+      },
+      "replay": {
+        "title": "Tour erneut ansehen",
+        "body": "Wann immer du etwas nachschauen willst, ist die Tour hier. Viel Spaß!"
+      }
+    }
   }
 }

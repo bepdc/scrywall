@@ -44,6 +44,11 @@ body {
     radial-gradient(700px 500px at 100% 60%, rgba(140, 90, 220, .13), transparent 70%),
     var(--bg);
   background-attachment: fixed;
+  /* Colonna: il footer sta sempre in fondo alla pagina, anche quando il
+     contenuto sopra (home o muro) è più basso dello schermo. */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .hidden { display: none !important; }
@@ -74,9 +79,23 @@ body {
   color: var(--accent);
 }
 
+/* Logo in topbar: è un pulsante (riporta alla home), ma deve restare un logo. */
+.brand-home {
+  background: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 4px 10px 4px 4px;
+  margin-left: -4px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.brand-home:hover { background: rgba(240, 185, 74, .08); border-color: transparent; }
+.brand-home:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 /* ---------- Setup ---------- */
 .setup {
-  min-height: 100vh;
+  flex: 1 0 auto; /* riempie lo schermo, footer escluso */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -226,6 +245,27 @@ button.primary:hover { filter: brightness(1.07); background: linear-gradient(180
 /* ---------- Selettore lingua (bandiera + nome nativo) ---------- */
 .lang-switch { position: relative; flex: none; }
 .lang-switch-corner { position: absolute; top: 18px; right: 18px; }
+
+/* Pulsantino "?" per rivedere il tour: in topbar sul muro, nell'angolo in
+   alto a sinistra della card in home (specchio del selettore lingua). */
+.tour-btn {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  border-color: rgba(240, 185, 74, .4);
+}
+.tour-btn:hover { background: rgba(240, 185, 74, .12); border-color: var(--accent); }
+.tour-btn-corner { position: absolute; top: 18px; left: 18px; }
 
 .lang-switch-btn {
   display: flex;
@@ -772,6 +812,106 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   cursor: pointer;
 }
 
+/* ---------- Footer ---------- */
+/* L'altezza del footer viene sottratta da layoutGrid/updateMainHeight: resta
+   sempre visibile in fondo senza che il muro debba scorrere per mostrarlo. */
+.site-footer {
+  flex: none;
+  margin-top: auto; /* in fondo anche se il contenuto sopra è più basso dello schermo */
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+  border-top: 1px solid rgba(240, 185, 74, .12);
+}
+.footer-copy { color: var(--gold); font-family: var(--font-display); letter-spacing: .04em; }
+.footer-sep { margin: 0 6px; opacity: .6; }
+
+/* ---------- Tour guidato ---------- */
+/* È un <dialog> modale: sta nel top layer (sopra a tutto, iframe compresi),
+   rende il resto della pagina inerte e tiene il focus dentro di sé. Copre
+   tutto lo schermo ed è trasparente: l'oscuramento lo fa l'ombra enorme
+   dello "spot", che lascia scoperto solo l'elemento evidenziato. */
+.tour {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  color: var(--text);
+}
+.tour::backdrop { background: transparent; }
+
+.tour-spot {
+  position: fixed;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 0 28px var(--accent-soft),
+    0 0 0 9999px rgba(5, 6, 10, .74);
+}
+/* Passo senza elemento da evidenziare: lo spot si riduce a un punto al
+   centro, senza anello, e resta solo l'oscuramento. */
+.tour-spot.is-empty { box-shadow: 0 0 0 9999px rgba(5, 6, 10, .74); }
+
+/* Lo spot e il fumetto scivolano da un passo all'altro, ma solo durante il
+   cambio di passo: se l'utente scorre la pagina devono seguirla subito. */
+.tour.is-moving .tour-spot,
+.tour.is-moving .tour-pop {
+  transition: left .25s ease, top .25s ease, width .25s ease, height .25s ease;
+}
+
+.tour-pop {
+  position: fixed;
+  width: min(360px, calc(100vw - 24px));
+  background: #11131c;
+  border: 1px solid rgba(240, 185, 74, .35);
+  border-radius: 18px;
+  padding: 18px 18px 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .6);
+}
+.tour-pop.enter { animation: tour-in .2s ease; }
+@keyframes tour-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.tour-progress { margin: 0 0 6px; font-size: 12px; letter-spacing: .04em; color: var(--muted); }
+.tour-title {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: .04em;
+  color: var(--accent);
+}
+.tour-body {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-line; /* gli a capo nei testi tradotti diventano righe vere */
+}
+.tour-actions { display: flex; align-items: center; gap: 8px; }
+.tour-actions .primary-sm { padding: 8px 18px; }
+.tour-skip {
+  margin-right: auto;
+  background: none;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 4px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: underline;
+}
+.tour-skip:hover { background: none; color: var(--text); }
+
 /* ---------- Mobile ---------- */
 @media (max-width: 800px) {
   .wall.focus { grid-template-columns: 1fr; grid-template-rows: none; }
@@ -802,4 +942,6 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .orb { animation: none; }
   .tile, .toast, .chip, button { transition: none; }
+  .tour.is-moving .tour-spot, .tour.is-moving .tour-pop { transition: none; }
+  .tour-pop.enter { animation: none; }
 }
