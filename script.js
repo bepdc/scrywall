@@ -641,22 +641,24 @@ function setAudio(index) {
 }
 
 // I controlli nativi di YouTube/Twitch dentro l'iframe permettono di smutare o
-// alzare il volume bypassando il pulsante del sito. L'IFrame API non offre un
-// evento "volume cambiato", quindi si forza il muto a intervalli su ogni tile
-// che il sito considera non attivo: solo il tile scelto col pulsante del sito
-// resta libero di seguire il volume nativo di YouTube/Twitch.
+// alzare il volume bypassando il pulsante del sito, ma solo sul tile espanso:
+// in griglia lo ".shield" blocca i click sull'iframe, quindi lì i controlli
+// nativi sono irraggiungibili e non serve controllarli. L'IFrame API non offre
+// un evento "volume cambiato", quindi si forza il muto a intervalli solo sul
+// tile in primo piano, e solo se non è quello scelto come audio attivo (in tal
+// caso comanda il controllo nativo della piattaforma).
 function enforceMute() {
-  state.tiles.forEach((t, i) => {
-    if (t.dead || !t.ready || !t.player) return;
-    if (state.audioIndex === i) return; // qui comanda il controllo nativo della piattaforma
-    try {
-      if (t.src.type === "yt") {
-        if (!t.player.isMuted()) t.player.mute();
-      } else if (t.src.type === "tw") {
-        if (!t.player.getMuted()) t.player.setMuted(true);
-      }
-    } catch (_) { /* player non pronto */ }
-  });
+  const i = state.focusedIndex;
+  if (i === null || i === state.audioIndex) return;
+  const t = state.tiles[i];
+  if (!t || t.dead || !t.ready || !t.player) return;
+  try {
+    if (t.src.type === "yt") {
+      if (!t.player.isMuted()) t.player.mute();
+    } else if (t.src.type === "tw") {
+      if (!t.player.getMuted()) t.player.setMuted(true);
+    }
+  } catch (_) { /* player non pronto */ }
 }
 
 setInterval(enforceMute, 200);
