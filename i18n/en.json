@@ -15,10 +15,9 @@
     }
   },
   "toolbar": {
-    "grid": "Grid View",
-    "muteAll": "🔇 Mute all",
     "share": "🔗 Share",
-    "editLink": "Edit links"
+    "loopOn": "🔁 Loop on",
+    "loopOff": "🔁 Loop off"
   },
   "tile": {
     "loading": "Loading…",
@@ -49,6 +48,36 @@
   "share": {
     "copied": "Link copied to clipboard",
     "promptCopy": "Copy the link:"
+  },
+  "manage": {
+    "addVideo": "+ Add video",
+    "addConfirm": "Add",
+    "addInvalid": "Invalid link",
+    "addedToast": {
+      "one": "Video added",
+      "other": "{n} videos added"
+    },
+    "editTitle": "Edit this link",
+    "editConfirm": "Confirm edit",
+    "editCancel": "Cancel edit",
+    "editInvalid": "Invalid link",
+    "editedToast": "Link updated",
+    "removeTitle": "Remove this video",
+    "removedToast": "Video removed",
+    "selectMode": "☑ Select",
+    "selectModeOn": "Cancel selection",
+    "selectCheckbox": "Select this video",
+    "removeSelected": {
+      "one": "Remove selected video",
+      "other": "Remove {n} selected videos"
+    },
+    "removedSelectedToast": {
+      "one": "Video removed",
+      "other": "{n} videos removed"
+    },
+    "expandTitle": "Expand this video",
+    "reduceTitle": "Shrink this video",
+    "undo": "Undo"
   },
   "common": {
     "languageLabel": "Language"

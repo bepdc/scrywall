@@ -22,16 +22,22 @@
       <span class="brand-name">Scrywall</span>
     </div>
     <div class="actions">
-      <button id="btn-grid" type="button" class="hidden" data-i18n="toolbar.grid">Visualizzazione Griglia</button>
-      <button id="btn-mute-all" type="button" data-i18n="toolbar.muteAll">🔇 Muta tutti</button>
+      <button id="btn-select" type="button" data-i18n="manage.selectMode">☑ Seleziona</button>
+      <button id="btn-remove-selected" type="button" class="hidden danger"></button>
+      <button id="btn-loop" type="button" aria-pressed="true" data-i18n="toolbar.loopOn">🔁 Loop attivo</button>
       <button id="btn-share" type="button" class="accent" data-i18n="toolbar.share">🔗 Condividi</button>
-      <button id="btn-edit" type="button" data-i18n="toolbar.editLink">Modifica link</button>
       <button id="donate-top" type="button" class="donate">
         <span aria-hidden="true">☕🍺</span><span class="donate-text" data-i18n="donate.cta"> Buy me a coffee or a beer</span>
       </button>
       <div id="lang-switch-topbar" class="lang-switch"></div>
     </div>
   </header>
+
+  <div id="add-panel" class="add-panel hidden">
+    <input id="add-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:setup.linkPlaceholder" placeholder="Incolla un link YouTube o Twitch…">
+    <button id="add-confirm" type="button" class="primary-sm" data-i18n="manage.addVideo">+ Aggiungi video</button>
+    <p id="add-msg" class="msg add-msg"></p>
+  </div>
 
   <section id="setup" class="setup">
     <div class="setup-card">

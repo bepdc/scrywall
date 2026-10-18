@@ -15,10 +15,9 @@
     }
   },
   "toolbar": {
-    "grid": "Vue en grille",
-    "muteAll": "🔇 Tout muet",
     "share": "🔗 Partager",
-    "editLink": "Modifier les liens"
+    "loopOn": "🔁 Boucle activée",
+    "loopOff": "🔁 Boucle désactivée"
   },
   "tile": {
     "loading": "Chargement…",
@@ -49,6 +48,36 @@
   "share": {
     "copied": "Lien copié dans le presse-papiers",
     "promptCopy": "Copie le lien :"
+  },
+  "manage": {
+    "addVideo": "+ Ajouter une vidéo",
+    "addConfirm": "Ajouter",
+    "addInvalid": "Lien non valide",
+    "addedToast": {
+      "one": "Vidéo ajoutée",
+      "other": "{n} vidéos ajoutées"
+    },
+    "editTitle": "Modifier ce lien",
+    "editConfirm": "Confirmer la modification",
+    "editCancel": "Annuler la modification",
+    "editInvalid": "Lien non valide",
+    "editedToast": "Lien mis à jour",
+    "removeTitle": "Supprimer cette vidéo",
+    "removedToast": "Vidéo supprimée",
+    "selectMode": "☑ Sélectionner",
+    "selectModeOn": "Annuler la sélection",
+    "selectCheckbox": "Sélectionner cette vidéo",
+    "removeSelected": {
+      "one": "Supprimer la vidéo sélectionnée",
+      "other": "Supprimer {n} vidéos sélectionnées"
+    },
+    "removedSelectedToast": {
+      "one": "Vidéo supprimée",
+      "other": "{n} vidéos supprimées"
+    },
+    "expandTitle": "Agrandir cette vidéo",
+    "reduceTitle": "Réduire cette vidéo",
+    "undo": "Annuler"
   },
   "common": {
     "languageLabel": "Langue"

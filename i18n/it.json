@@ -15,10 +15,9 @@
     }
   },
   "toolbar": {
-    "grid": "Visualizzazione Griglia",
-    "muteAll": "🔇 Muta tutti",
     "share": "🔗 Condividi",
-    "editLink": "Modifica link"
+    "loopOn": "🔁 Loop attivo",
+    "loopOff": "🔁 Loop disattivato"
   },
   "tile": {
     "loading": "Caricamento…",
@@ -49,6 +48,36 @@
   "share": {
     "copied": "Link copiato negli appunti",
     "promptCopy": "Copia il link:"
+  },
+  "manage": {
+    "addVideo": "+ Aggiungi video",
+    "addConfirm": "Aggiungi",
+    "addInvalid": "Link non valido",
+    "addedToast": {
+      "one": "Video aggiunto",
+      "other": "{n} video aggiunti"
+    },
+    "editTitle": "Modifica questo link",
+    "editConfirm": "Conferma modifica",
+    "editCancel": "Annulla modifica",
+    "editInvalid": "Link non valido",
+    "editedToast": "Link aggiornato",
+    "removeTitle": "Rimuovi questo video",
+    "removedToast": "Video rimosso",
+    "selectMode": "☑ Seleziona",
+    "selectModeOn": "Annulla selezione",
+    "selectCheckbox": "Seleziona questo video",
+    "removeSelected": {
+      "one": "Rimuovi il video selezionato",
+      "other": "Rimuovi {n} video selezionati"
+    },
+    "removedSelectedToast": {
+      "one": "Video rimosso",
+      "other": "{n} video rimossi"
+    },
+    "expandTitle": "Ingrandisci questo video",
+    "reduceTitle": "Riduci questo video",
+    "undo": "Annulla"
   },
   "common": {
     "languageLabel": "Lingua"

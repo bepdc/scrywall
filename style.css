@@ -205,6 +205,9 @@ button:active { transform: translateY(1px); }
 button.accent { border-color: rgba(240, 185, 74, .55); color: var(--accent); }
 button.accent:hover { background: rgba(240, 185, 74, .12); border-color: var(--accent); }
 
+button.danger { border-color: rgba(255, 138, 115, .55); color: var(--danger); }
+button.danger:hover { background: rgba(255, 138, 115, .12); border-color: var(--danger); }
+
 button.primary {
   width: 100%;
   background: linear-gradient(180deg, #f7ce6b, #d4a03a);
@@ -309,19 +312,67 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 }
 .topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
+/* ---------- Barra "aggiungi video" (sotto la topbar, sempre pronta) ---------- */
+.add-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(14, 16, 24, .95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(240, 185, 74, .18);
+}
+.add-panel #add-input {
+  flex: 1;
+  min-width: 200px;
+  background: rgba(0, 0, 0, .35);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+.add-panel #add-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.add-panel .msg.add-msg {
+  flex: 1 0 100%;
+  margin: 0;
+  min-height: 0;
+}
+
 /* ---------- Wall (modalità griglia: layout calcolato da script.js) ---------- */
+/* Flex invece di grid: con grid, una riga finale incompleta (es. 2 sopra, 1
+   sotto) resta ancorata a sinistra perché l'auto-flow riparte sempre dalla
+   prima colonna. Con flex-wrap, invece, ogni riga è centrata per conto suo:
+   il muro ha una larghezza esatta pari a "cols" riquadri più i distacchi, così
+   il wrap avviene sempre dopo "cols" elementi (mai di più, anche se in
+   orizzontale ci sarebbe spazio) e margin:auto centra il tutto nella pagina. */
 .wall {
   --head-h: 34px; /* altezza della riga col titolo: il valore vero lo imposta script.js */
-  display: grid;
-  grid-template-columns: repeat(var(--cols, 1), var(--tile-w, 100%));
-  gap: 8px;
-  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-content: center;
+  gap: 8px;
+  padding: 8px;
+  width: calc(var(--cols, 1) * var(--tile-w, 100%) + (var(--cols, 1) - 1) * 8px + 16px);
+  margin: 0 auto;
 }
 
 /* Ogni riquadro = riga col titolo (fuori dal video) + video sotto */
 .tile {
+  flex: 0 0 var(--tile-w, 100%); /* larghezza fissa: niente crescita/restringimento nel wrap */
+  /* Riordinare un video (diff di "Modifica link", Annulla rimozione) cambia
+     solo questo, mai la posizione nel DOM: spostare un nodo che contiene un
+     iframe lo fa ricaricare da capo. Nota: "order" cambia l'ordine visivo ma
+     non quello di tabulazione/lettura. */
+  order: var(--order, 0);
   display: flex;
   flex-direction: column;
   background: var(--surface);
@@ -342,6 +393,33 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   padding: 0 6px 0 12px;
   background: rgba(255, 255, 255, .04);
   border-bottom: 1px solid var(--border);
+  cursor: grab;
+  touch-action: none; /* niente scroll/zoom del browser mentre si trascina */
+}
+.tile-head button, .tile-head input { cursor: auto; touch-action: auto; }
+
+/* Riquadro in trascinamento: segue il puntatore via transform (il nodo non
+   si stacca mai dal DOM, il video dentro resta vivo), sopra agli altri. */
+.tile.dragging {
+  cursor: grabbing;
+  z-index: 10;
+  user-select: none;
+  will-change: transform;
+  /* Leggermente trasparente: se nel tragitto finisce sopra un altro riquadro
+     (capita spesso, è proprio lì che si fa lo scambio) resta leggibile cosa
+     c'è sotto invece di un'intestazione doppia illeggibile. */
+  opacity: .88;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+}
+.tile.dragging .tile-head { cursor: grabbing; }
+
+/* Riquadro su cui ci si trova mentre si trascina: non si sposta più (niente
+   da ricompositare, niente spasmi), solo un bordo spesso indica che è lì che
+   finirebbe il video trascinato se lo rilasci ora. */
+.tile.drop-target {
+  outline: 4px solid var(--accent);
+  outline-offset: -4px;
+  box-shadow: 0 0 26px var(--accent-soft);
 }
 
 .badge {
@@ -363,10 +441,107 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   font-weight: 500;
 }
 
-.tile-head .mute {
+/* Stesso riquadro quadrato per tutti i pulsanti dell'intestazione: senza,
+   emoji (🔇), SVG (ingrandisci) e simboli Unicode (✎ ✕ ✓) hanno ciascuno una
+   larghezza naturale diversa e la riga risulta disallineata. L'icona, di
+   qualunque tipo sia, si centra dentro via flex invece di affidarsi al suo
+   ingombro naturale. */
+.tile-head .mute,
+.tile-head .tile-expand,
+.tile-head .tile-edit,
+.tile-head .tile-remove,
+.tile-head .tile-select {
   flex: none;
-  padding: 3px 10px;
+  width: 26px;
+  height: 26px;
+  padding: 0;
   font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tile-expand svg {
+  display: block; /* niente svg inline: lascerebbe un filo di spazio sotto (allineamento al testo) */
+}
+
+/* È rimasto l'unico modo "a bottone" per ingrandire/ridurre (tolto il
+   doppione in topbar): lo stesso oro degli altri pulsanti principali
+   dell'app (Condividi), per farlo risaltare dagli altri — più secondari —
+   nella stessa intestazione. */
+.tile-head .tile-expand {
+  border-color: rgba(240, 185, 74, .5);
+  color: var(--accent);
+}
+.tile-head .tile-expand:hover {
+  background: rgba(240, 185, 74, .14);
+  border-color: var(--accent);
+}
+
+.tile-head .tile-select {
+  display: none; /* compare solo in modalità selezione multipla */
+  font-size: 12px;
+  border-radius: 7px;
+  color: transparent;
+}
+.wall.selecting .tile-head .tile-select { display: inline-flex; }
+.wall.selecting .tile-head .mute,
+.wall.selecting .tile-head .tile-expand,
+.wall.selecting .tile-head .tile-edit,
+.wall.selecting .tile-head .tile-remove { display: none; }
+
+.tile-select[aria-pressed="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1c1305;
+}
+
+.tile.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft) inset;
+}
+
+/* Modifica inline di un link già inserito: il modulo prende il posto di
+   badge/titolo/pulsanti, che restano nel DOM ma nascosti (niente da ricreare). */
+.tile-edit-form {
+  display: none;
+  flex: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.tile.editing .tile-head > .tile-select,
+.tile.editing .tile-head > .badge,
+.tile.editing .tile-head > .label,
+.tile.editing .tile-head > .mute,
+.tile.editing .tile-head > .tile-expand,
+.tile.editing .tile-head > .tile-edit,
+.tile.editing .tile-head > .tile-remove { display: none; }
+.tile.editing .tile-edit-form { display: flex; }
+
+.tile-edit-input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(0, 0, 0, .35);
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+.tile-edit-input:focus { outline: none; box-shadow: 0 0 0 2px var(--accent-soft); }
+
+.tile-edit-ok, .tile-edit-cancel {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tile-video {
@@ -384,21 +559,7 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   border: 0;
 }
 
-/* Strato trasparente che intercetta il click (altrimenti l'iframe se lo mangia) */
-.shield {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-}
-
 .tile.is-error .label { color: var(--danger); }
-
-/* Drag & drop: solo classi sul riquadro reale, nessun elemento fluttuante */
-.tile.dragging { opacity: .35; }
-.tile.drag-over {
-  outline: 2px dashed var(--accent);
-  outline-offset: -2px;
-}
 
 /* Il video con l'audio attivo ha un alone dorato */
 .tile.has-audio {
@@ -409,6 +570,11 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
 
 /* ---------- Modalità focus ---------- */
 .wall.focus {
+  /* La base .wall è flex (per centrare le righe in griglia): qui serve grid,
+     e una larghezza libera invece di quella calcolata per i riquadri piccoli. */
+  display: grid;
+  width: auto;
+  margin: 0;
   /* l'ultima riga 1fr assorbe lo spazio extra del video grande: niente buchi nella colonna */
   grid-template-columns: minmax(0, 1fr) var(--side-w);
   grid-template-rows: repeat(var(--side-count, 1), auto) 1fr;
@@ -441,14 +607,28 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   cursor: default;
 }
 
+/* Senza questo, il riquadro si stiracchia alla forma della cella (larga o
+   alta che sia) e YouTube/Twitch aggiungono le proprie barre nere INTERNE
+   per rispettare comunque il 16:9: risultato, nero ai lati o sopra/sotto
+   dentro l'iframe stesso. Qui invece tile-video resta lo spazio disponibile
+   (di qualunque forma), ma al suo interno centra un riquadro figlio con le
+   dimensioni 16:9 esatte, calcolate in JS (vedi updateMainHeight) come già
+   si fa per la griglia: mai un box non-16:9 passato al player. */
 .wall.focus .tile.focused .tile-video {
   aspect-ratio: auto;
   flex: 1;
   min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Nel video principale lo schermo trasparente sparisce: si usano i controlli del player */
-.wall.focus .tile.focused .shield { display: none; }
+.wall.focus .tile.focused .tile-video iframe,
+.wall.focus .tile.focused .tile-video .player-slot {
+  position: static;
+  width: var(--focus-w, 100%);
+  height: var(--focus-h, 100%);
+}
 
 /* ---------- Finestra donazioni ---------- */
 .dialog {
@@ -564,6 +744,9 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   left: 50%;
   bottom: 24px;
   transform: translate(-50%, 20px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: #151822;
   border: 1px solid var(--accent);
   color: var(--text);
@@ -575,7 +758,19 @@ li[aria-selected="true"] .lang-switch-option { color: var(--accent); }
   transition: opacity .2s, transform .2s;
   z-index: 50;
 }
-.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.toast.show { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+
+.toast-undo {
+  flex: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 /* ---------- Mobile ---------- */
 @media (max-width: 800px) {

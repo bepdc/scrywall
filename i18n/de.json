@@ -15,10 +15,9 @@
     }
   },
   "toolbar": {
-    "grid": "Rasteransicht",
-    "muteAll": "🔇 Alle stummschalten",
     "share": "🔗 Teilen",
-    "editLink": "Links bearbeiten"
+    "loopOn": "🔁 Schleife an",
+    "loopOff": "🔁 Schleife aus"
   },
   "tile": {
     "loading": "Wird geladen…",
@@ -49,6 +48,36 @@
   "share": {
     "copied": "Link in die Zwischenablage kopiert",
     "promptCopy": "Kopiere den Link:"
+  },
+  "manage": {
+    "addVideo": "+ Video hinzufügen",
+    "addConfirm": "Hinzufügen",
+    "addInvalid": "Ungültiger Link",
+    "addedToast": {
+      "one": "Video hinzugefügt",
+      "other": "{n} Videos hinzugefügt"
+    },
+    "editTitle": "Diesen Link bearbeiten",
+    "editConfirm": "Änderung bestätigen",
+    "editCancel": "Änderung abbrechen",
+    "editInvalid": "Ungültiger Link",
+    "editedToast": "Link aktualisiert",
+    "removeTitle": "Dieses Video entfernen",
+    "removedToast": "Video entfernt",
+    "selectMode": "☑ Auswählen",
+    "selectModeOn": "Auswahl abbrechen",
+    "selectCheckbox": "Dieses Video auswählen",
+    "removeSelected": {
+      "one": "Ausgewähltes Video entfernen",
+      "other": "{n} ausgewählte Videos entfernen"
+    },
+    "removedSelectedToast": {
+      "one": "Video entfernt",
+      "other": "{n} Videos entfernt"
+    },
+    "expandTitle": "Dieses Video vergrößern",
+    "reduceTitle": "Dieses Video verkleinern",
+    "undo": "Rückgängig"
   },
   "common": {
     "languageLabel": "Sprache"
