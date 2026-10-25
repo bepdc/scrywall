@@ -1,124 +1,276 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scrywall</title>
-  <meta name="description" data-i18n-attr="content:meta.description" content="Guarda più video YouTube e dirette Twitch contemporaneamente, in una sola schermata.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Cdefs%3E%3CradialGradient%20id='i'%20cx='40%25'%20cy='35%25'%20r='70%25'%3E%3Cstop%20offset='0'%20stop-color='%23fff2c9'/%3E%3Cstop%20offset='.5'%20stop-color='%23f0b94a'/%3E%3Cstop%20offset='1'%20stop-color='%23a24a12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx='32'%20cy='32'%20r='30'%20fill='none'%20stroke='%23e3b95f'%20stroke-opacity='.55'%20stroke-width='1.5'/%3E%3Cpath%20d='M32%205v7M15%2011l3%205.5M49%2011l-3%205.5'%20stroke='%23e3b95f'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M7%2034Q32%2012%2057%2034Q32%2056%207%2034Z'%20fill='%23120f26'%20stroke='%23f0b94a'%20stroke-width='2.5'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='32'%20cy='34'%20r='10.5'%20fill='url(%23i)'/%3E%3Cpath%20d='M32%2027L33.8%2032.2L39%2034L33.8%2035.8L32%2041L30.2%2035.8L25%2034L30.2%2032.2Z'%20fill='%23120f26'/%3E%3C/svg%3E">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scrywall</title>
+    <meta
+      name="description"
+      data-i18n-attr="content:meta.description"
+      content="Guarda più video YouTube e dirette Twitch contemporaneamente, in una sola schermata."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Cdefs%3E%3CradialGradient%20id='i'%20cx='40%25'%20cy='35%25'%20r='70%25'%3E%3Cstop%20offset='0'%20stop-color='%23fff2c9'/%3E%3Cstop%20offset='.5'%20stop-color='%23f0b94a'/%3E%3Cstop%20offset='1'%20stop-color='%23a24a12'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle%20cx='32'%20cy='32'%20r='30'%20fill='none'%20stroke='%23e3b95f'%20stroke-opacity='.55'%20stroke-width='1.5'/%3E%3Cpath%20d='M32%205v7M15%2011l3%205.5M49%2011l-3%205.5'%20stroke='%23e3b95f'%20stroke-width='2'%20stroke-linecap='round'/%3E%3Cpath%20d='M7%2034Q32%2012%2057%2034Q32%2056%207%2034Z'%20fill='%23120f26'%20stroke='%23f0b94a'%20stroke-width='2.5'%20stroke-linejoin='round'/%3E%3Ccircle%20cx='32'%20cy='34'%20r='10.5'%20fill='url(%23i)'/%3E%3Cpath%20d='M32%2027L33.8%2032.2L39%2034L33.8%2035.8L32%2041L30.2%2035.8L25%2034L30.2%2032.2Z'%20fill='%23120f26'/%3E%3C/svg%3E"
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <style>html:not(.i18n-ready) body{visibility:hidden}</style>
-  <noscript><style>body{visibility:visible!important}</style></noscript>
-</head>
-<body>
-
-  <header id="topbar" class="topbar hidden">
-    <button id="brand-home" type="button" class="brand brand-home" data-i18n-attr="title:toolbar.home,aria-label:toolbar.home" title="Torna alla home" aria-label="Torna alla home">
-      <span class="orb" aria-hidden="true"></span>
-      <span class="brand-name">Scrywall</span>
-    </button>
-    <div class="actions">
-      <button id="btn-select" type="button" data-i18n="manage.selectMode">☑ Seleziona</button>
-      <button id="btn-remove-selected" type="button" class="hidden danger"></button>
-      <button id="btn-loop" type="button" aria-pressed="true" data-i18n="toolbar.loopOn">🔁 Loop attivo</button>
-      <button id="btn-share" type="button" class="accent" data-i18n="toolbar.share">🔗 Condividi</button>
-      <button id="donate-top" type="button" class="donate">
-        <span aria-hidden="true">☕🍺</span><span class="donate-text" data-i18n="donate.cta"> Buy me a coffee or a beer</span>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      html:not(.i18n-ready) body {
+        visibility: hidden;
+      }
+    </style>
+    <noscript
+      ><style>
+        body {
+          visibility: visible !important;
+        }
+      </style></noscript
+    >
+  </head>
+  <body>
+    <header id="topbar" class="topbar hidden">
+      <button
+        id="brand-home"
+        type="button"
+        class="brand brand-home"
+        data-i18n-attr="title:toolbar.home,aria-label:toolbar.home"
+        title="Torna alla home"
+        aria-label="Torna alla home"
+      >
+        <span class="orb" aria-hidden="true"></span>
+        <span class="brand-name">Scrywall</span>
       </button>
-      <button id="tour-btn-wall" type="button" class="tour-btn" data-i18n-attr="title:tour.replay,aria-label:tour.replay" title="Rivedi il tour" aria-label="Rivedi il tour">?</button>
-      <div id="lang-switch-topbar" class="lang-switch"></div>
-    </div>
-  </header>
-
-  <div id="add-panel" class="add-panel hidden">
-    <input id="add-input" type="text" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder:setup.linkPlaceholder" placeholder="Incolla un link YouTube o Twitch…">
-    <button id="add-confirm" type="button" class="primary-sm" data-i18n="manage.addVideo">+ Aggiungi video</button>
-    <p id="add-msg" class="msg add-msg"></p>
-  </div>
-
-  <section id="setup" class="setup">
-    <div class="setup-card">
-      <button id="tour-btn-setup" type="button" class="tour-btn tour-btn-corner" data-i18n-attr="title:tour.replay,aria-label:tour.replay" title="Rivedi il tour" aria-label="Rivedi il tour">?</button>
-      <div id="lang-switch-setup" class="lang-switch lang-switch-corner"></div>
-      <div class="brand brand-big">
-        <span class="orb orb-big" aria-hidden="true"></span>
-        <h1>Scrywall</h1>
-      </div>
-      <p class="tagline" data-i18n="setup.tagline">Tanti schermi, un solo sguardo.</p>
-
-      <div class="divider" aria-hidden="true"><span>☽ ✦ ☾</span></div>
-
-      <p class="intro" data-i18n="setup.intro">
-        Aggiungi i link di YouTube o le dirette di Twitch, uno per riga: quella vuota in fondo è sempre pronta per il prossimo.
-        Partono tutti insieme e in muto, l'audio lo attivi tu, uno alla volta.
-        Poi puoi copiare un link da mandare a chi vuoi: vedrà gli stessi video.
-      </p>
-
-      <div id="rows" class="rows"></div>
-
-      <p id="msg" class="msg"></p>
-      <button id="btn-start" type="button" class="primary" data-i18n="setup.startButton">▶ Mostra tutti i video</button>
-
-      <div class="setup-footer">
-        <button id="donate-setup" type="button" class="donate">
-          <span aria-hidden="true">☕🍺</span> <span data-i18n="donate.cta">Buy me a coffee or a beer</span>
+      <div class="actions">
+        <button id="btn-select" type="button" data-i18n="manage.selectMode">
+          ☑ Seleziona
         </button>
+        <button
+          id="btn-remove-selected"
+          type="button"
+          class="hidden danger"
+        ></button>
+        <button
+          id="btn-loop"
+          type="button"
+          aria-pressed="true"
+          data-i18n="toolbar.loopOn"
+        >
+          🔁 Loop attivo
+        </button>
+        <button
+          id="btn-share"
+          type="button"
+          class="accent"
+          data-i18n="toolbar.share"
+        >
+          🔗 Condividi
+        </button>
+        <button id="donate-top" type="button" class="donate">
+          <span aria-hidden="true">☕🍺</span
+          ><span class="donate-text" data-i18n="donate.cta">
+            Buy me a coffee or a beer</span
+          >
+        </button>
+        <button
+          id="tour-btn-wall"
+          type="button"
+          class="tour-btn"
+          data-i18n-attr="title:tour.replay,aria-label:tour.replay"
+          title="Rivedi il tour"
+          aria-label="Rivedi il tour"
+        >
+          ?
+        </button>
+        <div id="lang-switch-topbar" class="lang-switch"></div>
       </div>
+    </header>
+
+    <div id="add-panel" class="add-panel hidden">
+      <input
+        id="add-input"
+        type="text"
+        autocomplete="off"
+        spellcheck="false"
+        data-i18n-attr="placeholder:setup.linkPlaceholder"
+        placeholder="Incolla un link YouTube o Twitch…"
+      />
+      <button
+        id="add-confirm"
+        type="button"
+        class="primary-sm"
+        data-i18n="manage.addVideo"
+      >
+        + Aggiungi video
+      </button>
+      <p id="add-msg" class="msg add-msg"></p>
     </div>
-  </section>
 
-  <main id="wall" class="wall hidden"></main>
-
-  <footer id="site-footer" class="site-footer">
-    <span class="footer-copy">© 2026 Scrywall</span>
-    <span class="footer-sep" aria-hidden="true">·</span>
-    <span data-i18n="footer.rights">Progetto indipendente, non affiliato né approvato da YouTube, Google o Twitch. I video restano dei rispettivi proprietari.</span>
-  </footer>
-
-  <dialog id="donate-dialog" class="dialog">
-    <div class="dialog-body">
-      <button id="donate-close" type="button" class="dialog-x" data-i18n-attr="aria-label:donate.close" aria-label="Chiudi">✕</button>
-      <h2>☕ <span data-i18n="donate.cta">Buy me a coffee or a beer</span> 🍺</h2>
-      <p class="dialog-text" data-i18n="donate.description">Il sito è gratis. Se ti è utile, un caffè o una birra fanno sempre piacere.</p>
-
-      <div id="donate-options" class="donate-options"></div>
-
-      <div class="donate-custom">
-        <label for="donate-custom-input" data-i18n="donate.customAmountLabel">Importo libero</label>
-        <div class="donate-custom-row">
-          <div class="amount-field">
-            <input id="donate-custom-input" type="text" inputmode="decimal" data-i18n-attr="placeholder:donate.customAmountPlaceholder" placeholder="es. 3,50" autocomplete="off">
-            <span id="donate-currency" class="currency"></span>
-          </div>
-          <button id="donate-custom-go" type="button" class="primary-sm" data-i18n="donate.goToPaypal">Vai a PayPal</button>
+    <section id="setup" class="setup">
+      <div class="setup-card">
+        <button
+          id="tour-btn-setup"
+          type="button"
+          class="tour-btn tour-btn-corner"
+          data-i18n-attr="title:tour.replay,aria-label:tour.replay"
+          title="Rivedi il tour"
+          aria-label="Rivedi il tour"
+        >
+          ?
+        </button>
+        <div
+          id="lang-switch-setup"
+          class="lang-switch lang-switch-corner"
+        ></div>
+        <div class="brand brand-big">
+          <span class="orb orb-big" aria-hidden="true"></span>
+          <h1>Scrywall</h1>
         </div>
-        <p id="donate-msg" class="msg"></p>
+        <p class="tagline" data-i18n="setup.tagline">
+          Tanti schermi, un solo sguardo.
+        </p>
+
+        <div class="divider" aria-hidden="true"><span>☽ ✦ ☾</span></div>
+
+        <p class="intro" data-i18n="setup.intro">
+          Aggiungi i link di YouTube o le dirette di Twitch, uno per riga:
+          quella vuota in fondo è sempre pronta per il prossimo. Partono tutti
+          insieme e in muto, l'audio lo attivi tu, uno alla volta. Poi puoi
+          copiare un link da mandare a chi vuoi: vedrà gli stessi video.
+        </p>
+
+        <div id="rows" class="rows"></div>
+
+        <p id="msg" class="msg"></p>
+        <button
+          id="btn-start"
+          type="button"
+          class="primary"
+          data-i18n="setup.startButton"
+        >
+          ▶ Mostra tutti i video
+        </button>
+
+        <div class="setup-footer">
+          <button id="donate-setup" type="button" class="donate">
+            <span aria-hidden="true">☕🍺</span>
+            <span data-i18n="donate.cta">Buy me a coffee or a beer</span>
+          </button>
+        </div>
       </div>
+    </section>
 
-      <p class="dialog-note" data-i18n="donate.note">Si apre PayPal in una nuova scheda: il pagamento avviene lì.</p>
-    </div>
-  </dialog>
+    <main id="wall" class="wall hidden"></main>
 
-  <dialog id="tour" class="tour" aria-labelledby="tour-title" aria-describedby="tour-body">
-    <div class="tour-spot" aria-hidden="true"></div>
-    <div class="tour-pop">
-      <p id="tour-progress" class="tour-progress"></p>
-      <h2 id="tour-title" class="tour-title"></h2>
-      <p id="tour-body" class="tour-body"></p>
-      <div class="tour-actions">
-        <button id="tour-skip" type="button" class="tour-skip" data-i18n="tour.skip">Salta il tour</button>
-        <button id="tour-back" type="button" data-i18n="tour.back">Indietro</button>
-        <button id="tour-next" type="button" class="primary-sm">Avanti</button>
+    <footer id="site-footer" class="site-footer">
+      <span class="footer-copy">© 2026 Scrywall</span>
+      <span class="footer-sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.rights"
+        >Progetto indipendente, non affiliato né approvato da YouTube, Google o
+        Twitch. I video restano dei rispettivi proprietari.</span
+      >
+    </footer>
+
+    <dialog id="donate-dialog" class="dialog">
+      <div class="dialog-body">
+        <button
+          id="donate-close"
+          type="button"
+          class="dialog-x"
+          data-i18n-attr="aria-label:donate.close"
+          aria-label="Chiudi"
+        >
+          ✕
+        </button>
+        <h2>
+          ☕ <span data-i18n="donate.cta">Buy me a coffee or a beer</span> 🍺
+        </h2>
+        <p class="dialog-text" data-i18n="donate.description">
+          Il sito è gratis. Se ti è utile, un caffè o una birra fanno sempre
+          piacere.
+        </p>
+
+        <div id="donate-options" class="donate-options"></div>
+
+        <div class="donate-custom">
+          <label for="donate-custom-input" data-i18n="donate.customAmountLabel"
+            >Importo libero</label
+          >
+          <div class="donate-custom-row">
+            <div class="amount-field">
+              <input
+                id="donate-custom-input"
+                type="text"
+                inputmode="decimal"
+                data-i18n-attr="placeholder:donate.customAmountPlaceholder"
+                placeholder="es. 3,50"
+                autocomplete="off"
+              />
+              <span id="donate-currency" class="currency"></span>
+            </div>
+            <button
+              id="donate-custom-go"
+              type="button"
+              class="primary-sm"
+              data-i18n="donate.goToPaypal"
+            >
+              Vai a PayPal
+            </button>
+          </div>
+          <p id="donate-msg" class="msg"></p>
+        </div>
+
+        <p class="dialog-note" data-i18n="donate.note">
+          Si apre PayPal in una nuova scheda: il pagamento avviene lì.
+        </p>
       </div>
-    </div>
-  </dialog>
+    </dialog>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <dialog
+      id="tour"
+      class="tour"
+      aria-labelledby="tour-title"
+      aria-describedby="tour-body"
+    >
+      <div class="tour-spot" aria-hidden="true"></div>
+      <div class="tour-pop">
+        <p id="tour-progress" class="tour-progress"></p>
+        <h2 id="tour-title" class="tour-title"></h2>
+        <p id="tour-body" class="tour-body"></p>
+        <div class="tour-actions">
+          <button
+            id="tour-skip"
+            type="button"
+            class="tour-skip"
+            data-i18n="tour.skip"
+          >
+            Salta il tour
+          </button>
+          <button id="tour-back" type="button" data-i18n="tour.back">
+            Indietro
+          </button>
+          <button id="tour-next" type="button" class="primary-sm">
+            Avanti
+          </button>
+        </div>
+      </div>
+    </dialog>
 
-  <script type="module" src="script.js"></script>
-</body>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="script.js"></script>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "97fe67d8efef40edb37f9c5b2faf398a"}'
+    ></script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
 </html>
